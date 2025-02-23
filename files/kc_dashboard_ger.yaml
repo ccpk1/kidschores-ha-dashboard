@@ -658,7 +658,7 @@ sections:
                   reward_progress=[],
                 ) -%}  
 
-                {# -- Set Kid Name -- #}   {%- set ns.Kid_name = 'Kira' -%}
+                {# -- Set Kid Name -- #}   {%- set ns.Kid_name = 'Kidname' -%}
 
                 {# -- Punkte sammeln Info -- #}   {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name | lower ~ '_points' -%}   {%- set
@@ -766,7 +766,7 @@ sections:
             filter:
               template: >-
                 {%- set ns = namespace(
-                  Kid_name='Kira',
+                  Kid_name='Kidname',
                   chore_select_entity='',
                   chore_selected='',
                   chore_sensor_id_prefix='',
@@ -962,7 +962,7 @@ sections:
           - type: custom:mini-graph-card
             unit: " "
             entities:
-              - entity: sensor.kc_kira_points
+              - entity: sensor.kc_kidname_points
           - type: custom:auto-entities
             card:
               square: false
@@ -971,7 +971,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(Kid_name='Kira', prefix_pattern='',
+                {%- set ns = namespace(Kid_name='Kidname', prefix_pattern='',
                 sorted_entities=[]) -%}
 
                 {#-- Liste der Button-Entitäten für dieses Kind erstellen
@@ -1028,7 +1028,7 @@ sections:
             filter:
               template: >-
                 {%- set ns = namespace(Kid_name='', current_points='',
-                points_label='' ) -%}   {%- set ns.Kid_name = 'Kira' -%}
+                points_label='' ) -%}   {%- set ns.Kid_name = 'Kidname' -%}
 
                 {# -- Punkte-Label -- #}      {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name | lower ~ '_points' -%}  {%- set
@@ -1099,7 +1099,7 @@ sections:
             filter:
               template: >-
                 {%- set ns = namespace(Kid_name='', entity_list=[]) -%}  {%- set
-                ns.Kid_name = 'Kira' -%}
+                ns.Kid_name = 'Kidname' -%}
 
                 {#-- Build a list of entities for this kid --#} {%- set
                 prefix_pattern = '(button|sensor)\\.kc_' ~ (ns.Kid_name|lower) ~
@@ -1121,8 +1121,4 @@ sections:
                   }
                 }},
         columns: 1
-visible:
-  - user: 781838370be848fc982a76a7365c37aa
-  - user: e033769162744b34adb35d74a23eaf82
-  - user: 7c3ff765a60d4b4fbc2c990a52ab32d9
 cards: []
