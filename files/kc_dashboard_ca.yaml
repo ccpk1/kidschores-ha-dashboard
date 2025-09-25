@@ -239,27 +239,27 @@ sections:
 
                 {%- set ns.BONUS = "Properes i Bonus" -%}
 
-                {%- set ns.STREAK = "Racha" -%}
+                {%- set ns.STREAK = "Ratxa" -%}
 
-                {%- set ns.STATUS = "Estado" -%}
+                {%- set ns.STATUS = "Estat" -%}
 
-                {%- set ns.DUE = "Para" -%}
+                {%- set ns.DUE = "Per a" -%}
 
                 {%- set ns.MULTI_APPROVE_MARK = "M" -%}
 
                 {%- set ns.SHARED_MARK = "C" -%}
 
-                {%- set ns.PENDING = "Pendiente" -%}
+                {%- set ns.PENDING = "Pendent" -%}
 
                 {%- set ns.CLAIMED = "Reclamada" -%}
 
-                {%- set ns.APPROVED = "Aprobada" -%}
+                {%- set ns.APPROVED = "Aprovada" -%}
 
-                {%- set ns.NO_DUE_DATE = "Sin fecha" -%}
+                {%- set ns.NO_DUE_DATE = "Sense data" -%}
 
-                {%- set ns.DAILY = "Diaria" -%}
+                {%- set ns.DAILY = "Diària" -%}
 
-                {%- set ns.WEEKLY = "Semanal" -%}
+                {%- set ns.WEEKLY = "Setmanal" -%}
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -715,25 +715,25 @@ sections:
 
                 {%- set ns.COMPLETED = 'Completada' -%}
 
-                {%- set ns.REWARDS_LABEL = "Premios" -%}
+                {%- set ns.REWARDS_LABEL = "Premis" -%}
 
-                {%- set ns.BONUSES_APPLIED_LABEL = "Bonificaciones aplicadas" -%}
+                {%- set ns.BONUSES_APPLIED_LABEL = "Bonificacions aplicades" -%}
 
-                {%- set ns.TOTAL_BONUS_LABEL = "Bonificación total" -%}
+                {%- set ns.TOTAL_BONUS_LABEL = "Bonificació total" -%}
 
-                {%- set ns.PENALTIES_APPLIED_LABEL = "Penalizaciones aplicadas" -%}
+                {%- set ns.PENALTIES_APPLIED_LABEL = "Penalitzacions aplicades" -%}
 
-                {%- set ns.TOTAL_PENALTY_LABEL = "Penalización total" -%}
+                {%- set ns.TOTAL_PENALTY_LABEL = "Penalització total" -%}
 
-                {%- set ns.ACHIEVEMENTS = "Logros" -%}
+                {%- set ns.ACHIEVEMENTS = "Assoliments" -%}
 
-                {%- set ns.CHALLENGES = "Retos" -%}
+                {%- set ns.CHALLENGES = "Reptes" -%}
 
                 {%- set ns.APPLIED = "Aplicada" -%}
 
-                {%- set ns.APPROVALS = "Aprobaciones" -%}
+                {%- set ns.APPROVALS = "Aprovacions" -%}
 
-                {%- set ns.CLAIMS = "Reclamaciones" -%}
+                {%- set ns.CLAIMS = "Reclamacions" -%}
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1168,27 +1168,27 @@ sections:
 
                 {%- set ns.DESCRIPTION_LABEL = "Descripció" -%}
 
-                {%- set ns.CRITERIA_LABEL = "Criterios" -%}
+                {%- set ns.CRITERIA_LABEL = "Criteris" -%}
 
-                {%- set ns.GOAL_LABEL = "Meta" -%}
+                {%- set ns.GOAL_LABEL = "Objectiu" -%}
 
-                {%- set ns.START_DATE_LABEL = "Fecha de inicio" -%}
+                {%- set ns.START_DATE_LABEL = "Data d'inici" -%}
 
-                {%- set ns.END_DATE_LABEL = "Fecha de fin" -%}
+                {%- set ns.END_DATE_LABEL = "Data de fi" -%}
 
                 {%- set ns.REWARD_LABEL = "Recompensa" -%}
 
-                {%- set ns.PROGRESS_LABEL = "Progreso" -%}
+                {%- set ns.PROGRESS_LABEL = "Progrés" -%}
 
-                {%- set ns.ASSIGNED_TO_LABEL = "Asignado a" -%}
+                {%- set ns.ASSIGNED_TO_LABEL = "Assignat a" -%}
 
-                {%- set ns.RELATED_CHORE_LABEL = "Tarea relacionada" -%}
+                {%- set ns.RELATED_CHORE_LABEL = "Tasca relacionada" -%}
 
-                {%- set ns.STREAK_GOAL = "Meta de racha" -%}
+                {%- set ns.STREAK_GOAL = "Objectiu de ratxa" -%}
 
-                {%- set ns.TOTAL_CHORES = "Tareas totales" -%}
+                {%- set ns.TOTAL_CHORES = "Tasques totals" -%}
 
-                {%- set ns.DAILY_MINIMUM = "Mínimo diario" -%}
+                {%- set ns.DAILY_MINIMUM = "Mínim diari" -%}
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1324,25 +1324,25 @@ sections:
 
                 {%- set ns.DESCRIPTION_LABEL = "Descripció" -%}
 
-                {%- set ns.CRITERIA_LABEL = "Criterios" -%}
+                {%- set ns.CRITERIA_LABEL = "Criteris" -%}
 
-                {%- set ns.GOAL_LABEL = "Meta" -%}
+                {%- set ns.GOAL_LABEL = "Objectiu" -%}
 
-                {%- set ns.START_DATE_LABEL = "Fecha de inicio" -%}
+                {%- set ns.START_DATE_LABEL = "Data d'inici" -%}
 
-                {%- set ns.END_DATE_LABEL = "Fecha de fin" -%}
+                {%- set ns.END_DATE_LABEL = "Data de fi" -%}
 
                 {%- set ns.REWARD_LABEL = "Recompensa" -%}
 
-                {%- set ns.PROGRESS_LABEL = "Progreso" -%}
+                {%- set ns.PROGRESS_LABEL = "Progrés" -%}
 
-                {%- set ns.ASSIGNED_TO_LABEL = "Asignado a" -%}
+                {%- set ns.ASSIGNED_TO_LABEL = "Assignat a" -%}
 
-                {%- set ns.RELATED_CHORE_LABEL = "Tarea relacionada" -%}
+                {%- set ns.RELATED_CHORE_LABEL = "Tasca relacionada" -%}
 
-                {%- set ns.TOTAL_CHORES = "Tareas totales" -%}
+                {%- set ns.TOTAL_CHORES = "Tasques totals" -%}
 
-                {%- set ns.PER_DAY_GOAL = "Meta diaria" -%}
+                {%- set ns.PER_DAY_GOAL = "Objectiu diari" -%}
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1763,45 +1763,45 @@ sections:
 
                 {%- set ns.VALUE_LABEL = "Valor" -%}
 
-                {%- set ns.DUE_DATE_LABEL = "Fecha límite" -%}
+                {%- set ns.DUE_DATE_LABEL = "Data límit" -%}
 
-                {%- set ns.RECURRENCE_LABEL = "Repetición" -%}
+                {%- set ns.RECURRENCE_LABEL = "Repetició" -%}
 
-                {%- set ns.CUSTOM_INTERVAL = "Intervalo" -%}
+                {%- set ns.CUSTOM_INTERVAL = "Interval" -%}
 
-                {%- set ns.NO_CHORE_SELECTED_LABEL = "No hay tarea seleccionada o estado no disponible" -%}
+                {%- set ns.NO_CHORE_SELECTED_LABEL = "No hi ha cap tasca seleccionada o l'estat no està disponible" -%}
 
-                {%- set ns.PLUS_NEXT_DUE = "+Próxima fecha" -%}
+                {%- set ns.PLUS_NEXT_DUE = "+Propera data" -%}
 
-                {%- set ns.PLUS_1_DAY = "+1 Día" -%}
+                {%- set ns.PLUS_1_DAY = "+1 Dia" -%}
 
-                {%- set ns.PLUS_1_WEEK = "+1 Semana" -%}
+                {%- set ns.PLUS_1_WEEK = "+1 Setmana" -%}
 
-                {%- set ns.CLEAR_DATE = "Borrar fecha" -%}
+                {%- set ns.CLEAR_DATE = "Esborrar data" -%}
 
-                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Seleccionar nueva fecha y hora" -%}
+                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Selecciona nova data i hora" -%}
 
-                {%- set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Toca para cambiar / Mantén para establecer)" -%}
+                {%- set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Toca per canviar / Manté per establir)" -%}
 
-                {%- set ns.RESET_ALL = "Restablecer todo" -%}
+                {%- set ns.RESET_ALL = "Restablir tot" -%}
 
-                {%- set ns.OVERDUE_CHORES = "Tareas atrasadas" -%}
+                {%- set ns.OVERDUE_CHORES = "Tasques endarrerides" -%}
 
-                {%- set ns.RESET_OVERDUE_STATUS = "Restablecer estado de atraso" -%}
+                {%- set ns.RESET_OVERDUE_STATUS = "Restablir estat d'endarreriment" -%}
 
-                {%- set ns.ALLOW_MULTIPLE_CLAIMS = "Permitir múltiples reclamaciones" -%}
+                {%- set ns.ALLOW_MULTIPLE_CLAIMS = "Permet múltiples reclamacions" -%}
 
-                {%- set ns.APPLICABLE_DAYS = "Días aplicables" -%}
+                {%- set ns.APPLICABLE_DAYS = "Dies aplicables" -%}
 
-                {%- set ns.CHORE_ADMIN_ACTIONS = "Acciones de administración de tareas" -%}
+                {%- set ns.CHORE_ADMIN_ACTIONS = "Accions d'administració de tasques" -%}
 
-                {%- set ns.OVERDUE = "Atrasada" -%}
+                {%- set ns.OVERDUE = "Endarrerida" -%}
 
-                {%- set ns.PENDING = "Pendiente" -%}
+                {%- set ns.PENDING = "Pendent" -%}
 
                 {%- set ns.CLAIMED = "Reclamada" -%}
 
-                {%- set ns.APPROVED = "Aprobada" -%}
+                {%- set ns.APPROVED = "Aprovada" -%}
 
                 {%- set ns.TRUE = "Sí" -%}
 
