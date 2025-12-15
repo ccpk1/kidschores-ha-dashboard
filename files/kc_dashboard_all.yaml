@@ -1875,8 +1875,8 @@ sections:
                 {#-- 4. Build Display --#}
                 {%- if pending_chore_data | count > 0 -%}
                   {%- for entry in pending_chore_data -%}
-                    {%- set ap = entry.approve_button_eid | default('') -%}
-                    {%- set dis = entry.disapprove_button_eid | default('') -%}
+                    {%- set ap = (entry.approve_button_eid if entry.approve_button_eid not in [None, 'None', ''] else '') | default('') -%}
+                    {%- set dis = (entry.disapprove_button_eid if entry.disapprove_button_eid not in [None, 'None', ''] else '') | default('') -%}
                     {%- set cname = entry.chore_name | default('') -%}
 
                     {%- if ap != '' -%}
@@ -1895,8 +1895,8 @@ sections:
 
                 {%- if pending_reward_data | count > 0 -%}
                   {%- for entry in pending_reward_data -%}
-                    {%- set ap = entry.approve_button_eid | default('') -%}
-                    {%- set dis = entry.disapprove_button_eid | default('') -%}
+                    {%- set ap = (entry.approve_button_eid if entry.approve_button_eid not in [None, 'None', ''] else '') | default('') -%}
+                    {%- set dis = (entry.disapprove_button_eid if entry.disapprove_button_eid not in [None, 'None', ''] else '') | default('') -%}
                     {%- set rname = entry.reward_name | default('') -%}
 
                     {%- if ap != '' -%}
