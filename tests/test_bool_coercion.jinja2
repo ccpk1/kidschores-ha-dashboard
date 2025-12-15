@@ -1,0 +1,89 @@
+{#-- Testing boolean coercion patterns --#}
+
+{#-- Test Case 1: Variable is true (boolean) --#}
+{% set test1 = true %}
+Test 1 (true): {{ (test1 | default(true) | string | lower) == 'true' }}
+
+{#-- Test Case 2: Variable is false (boolean) --#}
+{% set test2 = false %}
+Test 2 (false): {{ (test2 | default(true) | string | lower) == 'true' }}
+
+{#-- Test Case 3: Variable is empty string --#}
+{% set test3 = '' %}
+Test 3 (''): {{ (test3 | default(true) | string | lower) == 'true' }}
+
+{#-- Test Case 4: Variable is 'true' (string) --#}
+{% set test4 = 'true' %}
+Test 4 ('true'): {{ (test4 | default(true) | string | lower) == 'true' }}
+
+{#-- Test Case 5: Variable is 'false' (string) --#}
+{% set test5 = 'false' %}
+Test 5 ('false'): {{ (test5 | default(true) | string | lower) == 'true' }}
+
+{#-- Test Case 6: Variable is partial string 't' --#}
+{% set test6 = 't' %}
+Test 6 ('t'): {{ (test6 | default(true) | string | lower) == 'true' }}
+
+{#-- Test Case 7: Variable is partial string 'tr' --#}
+{% set test7 = 'tr' %}
+Test 7 ('tr'): {{ (test7 | default(true) | string | lower) == 'true' }}
+
+{#-- Test Case 8: Variable is undefined (not set) --#}
+Test 8 (undefined): {{ (test_undefined | default(true) | string | lower) == 'true' }}
+
+{#-- ALTERNATIVE PATTERN: Check for empty/undefined first --#}
+---
+ALTERNATIVE PATTERN TESTS:
+---
+
+{% set alt1 = true %}
+Alt 1 (true): {{ true if (alt1 | string | trim) in ['', 'True', 'true'] else (alt1 | string | lower) == 'true' }}
+
+{% set alt2 = false %}
+Alt 2 (false): {{ true if (alt2 | string | trim) in ['', 'True', 'true'] else (alt2 | string | lower) == 'true' }}
+
+{% set alt3 = '' %}
+Alt 3 (''): {{ true if (alt3 | string | trim) in ['', 'True', 'true'] else (alt3 | string | lower) == 'true' }}
+
+{% set alt4 = 't' %}
+Alt 4 ('t'): {{ true if (alt4 | string | trim) in ['', 'True', 'true'] else (alt4 | string | lower) == 'true' }}
+
+Alt 5 (undefined): {{ true if (alt_undefined | string | trim) in ['', 'True', 'true'] else (alt_undefined | string | lower) == 'true' }}
+
+{#-- SIMPLEST PATTERN: Use string default value --#}
+---
+SIMPLEST PATTERN (with string default):
+---
+
+{% set simple1 = true %}
+Simple 1 (true): {{ ((simple1 | string) if simple1 is defined else 'true') | lower == 'true' }}
+
+{% set simple2 = false %}
+Simple 2 (false): {{ ((simple2 | string) if simple2 is defined else 'true') | lower == 'true' }}
+
+{% set simple3 = '' %}
+Simple 3 (''): {{ ((simple3 | string) if simple3 is defined else 'true') | lower == 'true' }}
+
+{% set simple4 = 't' %}
+Simple 4 ('t'): {{ ((simple4 | string) if simple4 is defined else 'true') | lower == 'true' }}
+
+Simple 5 (undefined): {{ ((simple_undefined | string) if simple_undefined is defined else 'true') | lower == 'true' }}
+
+{#-- CLEANEST PATTERN: Empty string handling --#}
+---
+CLEANEST PATTERN (empty = default):
+---
+
+{% set clean1 = true %}
+Clean 1 (true): {{ (('true' if (clean1 | string | trim) == '' else (clean1 | string)) | lower) == 'true' }}
+
+{% set clean2 = false %}
+Clean 2 (false): {{ (('true' if (clean2 | string | trim) == '' else (clean2 | string)) | lower) == 'true' }}
+
+{% set clean3 = '' %}
+Clean 3 (''): {{ (('true' if (clean3 | string | trim) == '' else (clean3 | string)) | lower) == 'true' }}
+
+{% set clean4 = 't' %}
+Clean 4 ('t'): {{ (('true' if (clean4 | string | trim) == '' else (clean4 | string)) | lower) == 'true' }}
+
+Clean 5 (undefined): {{ (('true' if (clean_undefined | default('') | string | trim) == '' else (clean_undefined | default('') | string)) | lower) == 'true' }}

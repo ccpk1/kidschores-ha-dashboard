@@ -1,0 +1,97 @@
+# ============================================================================
+# TEST DASHBOARD VALIDATION - Developer Tools Template Test
+# ============================================================================
+#
+# ⚠️ IMPORTANT: This file contains raw Jinja2 templates that are NOT valid
+# YAML! The YAML parser will show errors - this is expected and normal.
+# This file is meant to be copy-pasted into Home Assistant's Developer Tools
+# → Template editor, NOT loaded as a YAML configuration file.
+#
+# PURPOSE:
+#   Test the dashboard's error handling and validation logic without deploying
+#   the full dashboard YAML. This helps verify that:
+#   - Wrong kid names trigger appropriate error messages
+#   - Correct kid names pass validation
+#   - Type coercion handles preference value changes
+#   - Translation fallbacks work correctly
+#
+# HOW TO USE:
+#   1. Open Home Assistant
+#   2. Go to Developer Tools → Template
+#   3. Copy and paste this entire file into the template editor
+#   4. Click "Render" or watch the live preview
+#   5. Review the test results displayed
+#
+# WHAT IT TESTS:
+#   - Test 1: Non-existent kid name (should trigger validation error)
+#   - Test 2: Existing kid name (should pass validation)
+#   - Test 3: Type coercion (string '2' converted to int 2)
+#   - Test 4: Translation fallback (missing keys use English defaults)
+#
+# EXPECTED RESULTS:
+#   All tests should show ✅ PASS or ✅ SUCCESS indicators
+#
+# ============================================================================
+
+# Test 1: Wrong Kid_name (should show error)
+{% set Kid_name = 'WrongKid' %}
+{%- set ns = namespace(Kid_name_normalize='') -%}
+{%- set ns.Kid_name_normalize = Kid_name | slugify() -%}
+{%- set dashboard_helper = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+
+Test 1 - Wrong Kid Name:
+Dashboard helper: {{ dashboard_helper }}
+State: {{ states(dashboard_helper) }}
+{% if states(dashboard_helper) in ['unknown', 'unavailable'] %}
+✅ VALIDATION TRIGGERED - Would show error message
+Error message would display:
+  ⚠️ Dashboard Configuration Error
+  Cannot find: sensor.kc_wrongkid_ui_dashboard_helper
+  Fix: Change Kid_name in User Configuration section
+{% else %}
+❌ VALIDATION FAILED - Entity exists (unexpected)
+{% endif %}
+
+---
+
+# Test 2: Correct Kid_name (should work)
+{% set Kid_name_correct = 'Zoe' %}
+{%- set ns2 = namespace(Kid_name_normalize='') -%}
+{%- set ns2.Kid_name_normalize = Kid_name_correct | slugify() -%}
+{%- set dashboard_helper2 = 'sensor.kc_' ~ ns2.Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+
+Test 2 - Correct Kid Name (Zoe):
+Dashboard helper: {{ dashboard_helper2 }}
+State: {{ states(dashboard_helper2) }}
+{% if states(dashboard_helper2) in ['unknown', 'unavailable'] %}
+❌ VALIDATION TRIGGERED - Entity should exist
+{% else %}
+✅ VALIDATION PASSED - Would render dashboard normally
+UI Translations available: {{ state_attr(dashboard_helper2, 'ui_translations') is not none }}
+Chores list available: {{ state_attr(dashboard_helper2, 'chores') is not none }}
+{% endif %}
+
+---
+
+# Test 3: Type Coercion
+{% set pref_column_count_string = '2' %}
+{% set pref_column_count_int = pref_column_count_string | int(default=2) %}
+
+Test 3 - Type Coercion:
+Original (string): {{ pref_column_count_string }} (type: {{ pref_column_count_string.__class__.__name__ }})
+After coercion (int): {{ pref_column_count_int }} (type: {{ pref_column_count_int.__class__.__name__ }})
+✅ Type coercion works: {{ pref_column_count_int is number }}
+
+---
+
+# Test 4: Translation Fallback
+{%- set ui = state_attr(dashboard_helper2, 'ui_translations') or {} -%}
+
+Test 4 - Translation Fallbacks:
+{% if ui %}
+Real translation: {{ ui.get('chores', 'Chores') }}
+Missing key fallback: {{ ui.get('nonexistent_key', 'Fallback English Text') }}
+✅ Fallback system working
+{% else %}
+No UI translations available for test
+{% endif %}

@@ -1,0 +1,83 @@
+{#-- FINAL BOOLEAN COERCION TEST --#}
+{#-- Copy this to Developer Tools → Template to test --#}
+
+=== Testing: (value | default('') | string | trim | lower) in ['true', ''] ===
+
+Test 1 - Boolean true:
+{% set test1 = true %}
+Value: {{ test1 }} | Result: {{ (test1 | default('') | string | trim | lower) in ['true', ''] }} | Expected: True
+
+Test 2 - Boolean false:
+{% set test2 = false %}
+Value: {{ test2 }} | Result: {{ (test2 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 3 - String 'true':
+{% set test3 = 'true' %}
+Value: "{{ test3 }}" | Result: {{ (test3 | default('') | string | trim | lower) in ['true', ''] }} | Expected: True
+
+Test 4 - String 'false':
+{% set test4 = 'false' %}
+Value: "{{ test4 }}" | Result: {{ (test4 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 5 - Empty string:
+{% set test5 = '' %}
+Value: "" | Result: {{ (test5 | default('') | string | trim | lower) in ['true', ''] }} | Expected: True
+
+Test 6 - Undefined (not set):
+Result: {{ (test_undefined | default('') | string | trim | lower) in ['true', ''] }} | Expected: True
+
+Test 7 - Partial string 't':
+{% set test7 = 't' %}
+Value: "{{ test7 }}" | Result: {{ (test7 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 8 - Partial string 'tr':
+{% set test8 = 'tr' %}
+Value: "{{ test8 }}" | Result: {{ (test8 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 9 - Partial string 'tru':
+{% set test9 = 'tru' %}
+Value: "{{ test9 }}" | Result: {{ (test9 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 10 - Number 0:
+{% set test10 = 0 %}
+Value: {{ test10 }} | Result: {{ (test10 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 11 - Number 1:
+{% set test11 = 1 %}
+Value: {{ test11 }} | Result: {{ (test11 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 12 - String 'True' (capital T):
+{% set test12 = 'True' %}
+Value: "{{ test12 }}" | Result: {{ (test12 | default('') | string | trim | lower) in ['true', ''] }} | Expected: True
+
+Test 13 - String 'FALSE' (all caps):
+{% set test13 = 'FALSE' %}
+Value: "{{ test13 }}" | Result: {{ (test13 | default('') | string | trim | lower) in ['true', ''] }} | Expected: False
+
+Test 14 - Whitespace only:
+{% set test14 = '   ' %}
+Value: "   " | Result: {{ (test14 | default('') | string | trim | lower) in ['true', ''] }} | Expected: True (trims to empty)
+
+---
+=== Testing: (value | default('') | string | trim | lower) in ['true'] ===
+(For false-default preferences)
+
+Test 15 - Empty string (should be False):
+{% set test15 = '' %}
+Value: "" | Result: {{ (test15 | default('') | string | trim | lower) in ['true'] }} | Expected: False
+
+Test 16 - Undefined (should be False):
+Result: {{ (test_undefined2 | default('') | string | trim | lower) in ['true'] }} | Expected: False
+
+Test 17 - String 'true' (should be True):
+{% set test17 = 'true' %}
+Value: "{{ test17 }}" | Result: {{ (test17 | default('') | string | trim | lower) in ['true'] }} | Expected: True
+
+Test 18 - Boolean false (should be False):
+{% set test18 = false %}
+Value: {{ test18 }} | Result: {{ (test18 | default('') | string | trim | lower) in ['true'] }} | Expected: False
+
+---
+=== SUMMARY ===
+All tests should complete without errors.
+If you see any TemplateError or exceptions, the pattern needs adjustment.

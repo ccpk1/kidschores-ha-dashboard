@@ -1,0 +1,79 @@
+{#-- DASHBOARD PREFERENCE SIMULATION TEST --#}
+{#-- This simulates what happens when editing a dashboard preference --#}
+
+=== SCENARIO 1: User changes true → false ===
+Step 1 - Original value (true):
+{%- set pref_test = true -%}
+Result: {{ (pref_test | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 2 - User clears field (empty):
+{%- set pref_test = '' -%}
+Result: {{ (pref_test | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 3 - User types 'f':
+{%- set pref_test = 'f' -%}
+Result: {{ (pref_test | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 4 - User types 'fa':
+{%- set pref_test = 'fa' -%}
+Result: {{ (pref_test | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 5 - User types 'fal':
+{%- set pref_test = 'fal' -%}
+Result: {{ (pref_test | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 6 - User types 'fals':
+{%- set pref_test = 'fals' -%}
+Result: {{ (pref_test | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 7 - User completes 'false':
+{%- set pref_test = 'false' -%}
+Result: {{ (pref_test | default('') | string | trim | lower) in ['true', ''] }}
+
+---
+=== SCENARIO 2: User changes false → true ===
+Step 1 - Original value (false):
+{%- set pref_test2 = false -%}
+Result: {{ (pref_test2 | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 2 - User clears field (empty):
+{%- set pref_test2 = '' -%}
+Result: {{ (pref_test2 | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 3 - User types 't':
+{%- set pref_test2 = 't' -%}
+Result: {{ (pref_test2 | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 4 - User types 'tr':
+{%- set pref_test2 = 'tr' -%}
+Result: {{ (pref_test2 | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 5 - User types 'tru':
+{%- set pref_test2 = 'tru' -%}
+Result: {{ (pref_test2 | default('') | string | trim | lower) in ['true', ''] }}
+
+Step 6 - User completes 'true':
+{%- set pref_test2 = 'true' -%}
+Result: {{ (pref_test2 | default('') | string | trim | lower) in ['true', ''] }}
+
+---
+=== SCENARIO 3: Default-false preference (exclude_approved) ===
+Step 1 - Original value (false):
+{%- set pref_test3 = false -%}
+Result: {{ (pref_test3 | default('') | string | trim | lower) in ['true'] }}
+
+Step 2 - User clears field (should stay false):
+{%- set pref_test3 = '' -%}
+Result: {{ (pref_test3 | default('') | string | trim | lower) in ['true'] }}
+
+Step 3 - User types 't':
+{%- set pref_test3 = 't' -%}
+Result: {{ (pref_test3 | default('') | string | trim | lower) in ['true'] }}
+
+Step 4 - User completes 'true':
+{%- set pref_test3 = 'true' -%}
+Result: {{ (pref_test3 | default('') | string | trim | lower) in ['true'] }}
+
+---
+✅ If all steps render without errors, the pattern is safe!
+❌ If you see TemplateError, the pattern needs fixing.

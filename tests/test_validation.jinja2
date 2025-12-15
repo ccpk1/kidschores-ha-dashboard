@@ -1,0 +1,90 @@
+{#
+============================================================================
+TEST DASHBOARD VALIDATION - Jinja2 Template Test
+============================================================================
+
+PURPOSE:
+  Comprehensive test of dashboard error handling using Home Assistant's
+  Jinja2 template engine. Validates all error handling mechanisms work
+  correctly.
+
+HOW TO USE:
+  1. Open Home Assistant
+  2. Navigate to Developer Tools → Template
+  3. Copy and paste this entire file into the template editor
+  4. Click "Render" or observe the live preview
+  5. Review test results printed in the output
+
+WHAT IT TESTS:
+  1. Non-existent kid validation (should trigger error message)
+  2. Existing kid validation (should pass and render data)
+  3. Type coercion for preferences (string → int conversion)
+  4. Translation fallbacks (missing keys use English defaults)
+
+EXPECTED OUTPUT:
+  - Status indicators showing ✅ PASS for each test
+  - Detailed information about helper entity states
+  - Type coercion demonstration
+  - Translation fallback demonstration
+
+DEBUGGING:
+  - If tests fail, check that KidsChores integration is loaded
+  - Verify kids exist: Zoe, Max, or Lila in the integration
+  - Check entity registry for sensor.kc_*_ui_dashboard_helper entities
+
+============================================================================
+#}
+
+{%- set ns = namespace(results=[]) -%}
+
+{#- Test 1: Non-existent kid (should fail validation) -#}
+{%- set test1_kidname = 'NonExistentKid' -%}
+{%- set test1_helper = 'sensor.kc_' ~ (test1_kidname | lower | replace(' ', '_')) ~ '_ui_dashboard_helper' -%}
+
+{#- Test 2: Existing kids (should pass validation) -#}
+{%- set existing_kids = ['Zoe', 'Max', 'Lila'] -%}
+
+{#- Check if validation would trigger for each kid -#}
+{%- for kid in [test1_kidname] + existing_kids -%}
+  {%- set helper_id = 'sensor.kc_' ~ (kid | lower | replace(' ', '_')) ~ '_ui_dashboard_helper' -%}
+  {%- set helper_state = states(helper_id) -%}
+  {%- set would_show_error = helper_state in ['unknown', 'unavailable'] -%}
+  {%- set expected_error = (kid == test1_kidname) -%}
+  {%- set test_passes = (would_show_error == expected_error) -%}
+
+  {%- set _ = ns.results.append({
+    'kid': kid,
+    'helper': helper_id,
+    'state': helper_state,
+    'validation_triggered': would_show_error,
+    'expected': expected_error,
+    'passes': test_passes
+  }) -%}
+{%- endfor -%}
+
+{#- Print results -#}
+=== DASHBOARD VALIDATION TEST RESULTS ===
+
+{%- for r in ns.results %}
+{{ '✅ PASS' if r.passes else '❌ FAIL' }} | Kid: {{ "%-20s" | format(r.kid) }} | Helper State: {{ "%-12s" | format(r.state) }} | Error Shown: {{ r.validation_triggered }}
+{%- endfor %}
+
+{{ "="*70 }}
+
+{#- Test Type Coercion -#}
+{%- set pref_str = '2' -%}
+{%- set pref_int = pref_str | int(default=2) -%}
+
+✅ Type Coercion: '{{ pref_str }}' (string) → {{ pref_int }} (int)
+
+{#- Test Translation Fallback -#}
+{%- set helper_zoe = 'sensor.kc_zoe_ui_dashboard_helper' -%}
+{%- set ui = state_attr(helper_zoe, 'ui_translations') or {} -%}
+{%- set chores_text = ui.get('chores', 'Chores') -%}
+✅ Translation: ui.get('chores', 'Chores') = '{{ chores_text }}'
+
+{%- set missing_text = ui.get('nonexistent_key', 'Default English') -%}
+✅ Missing Key: ui.get('nonexistent_key', 'Default English') = '{{ missing_text }}'
+
+{{ "="*70 }}
+✅ ALL VALIDATION TESTS COMPLETE
