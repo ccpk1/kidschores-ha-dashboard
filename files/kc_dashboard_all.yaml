@@ -1989,6 +1989,7 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_date_helper = 'datetime.kc_' ~ name_normalize ~ '_ui_dashboard_date_helper' -%}
                 {%- set points_sensor = 'sensor.kc_' ~ name_normalize ~ '_points' -%}
                 {%- set chore_select_entity = 'select.kc_' ~ name_normalize ~ '_chore_list' -%}
                 {%- set chore_sensor_id_prefix = 'sensor.kc_' ~ name_normalize ~ '_chore_status_' -%}
@@ -2078,7 +2079,8 @@ sections:
                   {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                   {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ui.get('none', 'err-none') -%}
 
-                  {%- set ns.select_new_date_and_time_secondary = ui.get('tap_to_change', 'err-tap_to_change') ~ "\n \n" ~ state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else ui.get('no_date_set', 'err-no_date_set') -%}
+                  {%- set ns.datetime_helper = dashboard_date_helper -%}
+                  {%- set ns.select_new_date_and_time_secondary = ui.get('tap_to_change', 'err-tap_to_change') ~ "\n \n" ~ as_timestamp(states(ns.datetime_helper)) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states(ns.datetime_helper) != 'unknown' else ui.get('no_date_set', 'err-no_date_set') -%}
 
                   {#-- 4. Build Display --#}
                   {%- set ns.content = "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ui.get('chore_detail', 'err-chore_detail') ~ ": " ~ (ns.chore_selected | title) ~ "  \n" -%}
@@ -2240,7 +2242,7 @@ sections:
                   'cards': [
                     {
                       'type': 'custom:mushroom-template-card',
-                      'entity': 'input_datetime.kc_ui_set_date_helper',
+                      'entity': ns.datetime_helper,
                       'primary': ui.get('select_new_date', 'err-select_new_date'),
                       'secondary': ns.select_new_date_and_time_secondary,
                       'multiline_secondary': 'true',
@@ -2255,7 +2257,7 @@ sections:
                         'service': 'kidschores.set_chore_due_date',
                         'data': {
                           'chore_name': ns.chore_selected,
-                          'due_date': states('input_datetime.kc_ui_set_date_helper')
+                          'due_date': states(ns.datetime_helper)
                         }
                       }
                     }
