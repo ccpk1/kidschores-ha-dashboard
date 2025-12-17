@@ -41,8 +41,8 @@ sections:
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
                 {%- set points_sensor = 'sensor.kc_' ~ name_normalize ~ '_points' -%}
-                {%- set total_sensor = 'sensor.kc_' ~ name_normalize ~ '_chores_completed_total' -%}
-                {%- set highest_badge_entity = 'sensor.kc_' ~ name_normalize ~ '_highest_badge' -%}
+                {%- set total_sensor = 'sensor.kc_' ~ name_normalize ~ '_chores' -%}
+                {%- set highest_badge_entity = 'sensor.kc_' ~ name_normalize ~ '_badges' -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -763,8 +763,8 @@ sections:
                 {%- set points_sensor = 'sensor.kc_' ~ name_normalize ~ '_points' -%}
                 {%- set points_icon = state_attr(points_sensor, 'icon') -%}
                 {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
-                {%- set all_time_sensor = 'sensor.kc_' ~ name_normalize ~ '_chores_completed_total' -%}
-                {%- set highest_badge_entity = 'sensor.kc_' ~ name_normalize ~ '_highest_badge' -%}
+                {%- set all_time_sensor = 'sensor.kc_' ~ name_normalize ~ '_chores' -%}
+                {%- set highest_badge_entity = 'sensor.kc_' ~ name_normalize ~ '_badges' -%}
 
                 {%- set ns = namespace(
                   badge_list="\n ",
@@ -803,7 +803,7 @@ sections:
                 {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
                 {%- set points = states(points_sensor) | int(default=0) -%}
                 {%- set points_earned_all_time = state_attr(points_sensor, 'point_stat_points_earned_all_time') | int(default=0) -%}
-                {%- set all_time_completed = states(all_time_sensor) | int(default=0) -%}
+                {%- set all_time_completed = state_attr(all_time_sensor, 'chore_stat_approved_all_time') | int(default=0) -%}
                 {%- set highest_badge = states(highest_badge_entity) or 'None' -%}
                 {%- set highest_badge_icon = state_attr(highest_badge_entity, 'icon') or 'mdi:medal-outline' -%}
                 {%- set highest_badge_multiplier = (state_attr(highest_badge_entity, 'awards') or {}).get('points_multiplier') | float(1) -%}
@@ -1010,7 +1010,7 @@ sections:
             {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
             {%- set ns.points = states(points_sensor) | int(default=0) -%}
             {%- set ns.points_label = state_attr(points_sensor, 'unit_of_measurement') | default('Pts', true) -%}
-            {%- set ns.highest_badge_sensor = 'sensor.kc_' ~ name_normalize ~ '_highest_badge' -%}
+            {%- set ns.highest_badge_sensor = 'sensor.kc_' ~ name_normalize ~ '_badges' -%}
             {%- set hb_state = states(ns.highest_badge_sensor) -%}
 
             {#-- Extract Live Maintenance Details (if valid) --#}
@@ -1655,8 +1655,8 @@ sections:
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
                 {%- set points_sensor = 'sensor.kc_' ~ name_normalize ~ '_points' -%}
-                {%- set total_chores_sensor = 'sensor.kc_' ~ name_normalize ~ '_chores_completed_total' -%}
-                {%- set highest_badge_sensor = 'sensor.kc_' ~ name_normalize ~ '_highest_badge' -%}
+                {%- set total_chores_sensor = 'sensor.kc_' ~ name_normalize ~ '_chores' -%}
+                {%- set highest_badge_sensor = 'sensor.kc_' ~ name_normalize ~ '_badges' -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -1991,7 +1991,7 @@ sections:
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
                 {%- set dashboard_date_helper = 'datetime.kc_' ~ name_normalize ~ '_ui_dashboard_date_helper' -%}
                 {%- set points_sensor = 'sensor.kc_' ~ name_normalize ~ '_points' -%}
-                {%- set chore_select_entity = 'select.kc_' ~ name_normalize ~ '_chore_list' -%}
+                {%- set chore_select_entity = 'select.kc_' ~ name_normalize ~ '_ui_dashboard_chore_list_helper' -%}
                 {%- set chore_sensor_id_prefix = 'sensor.kc_' ~ name_normalize ~ '_chore_status_' -%}
 
                 {%- set ns = namespace(
@@ -2572,7 +2572,13 @@ sections:
                 {#-- *** Section 3: Collect Data *** --#}
                 {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
                 {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
-                {%- set entity_list = state_attr(dashboard_helper, 'activity_monitor_entities') | default([], true) -%}
+                {%- set entity_list = device_entities(device_id(dashboard_helper))
+                   | reject('search', 'ui_dashboard')
+                   | reject('match', 'calendar')
+                   | reject('search', 'points_earned_')
+                   | reject('search', 'points_max_')
+                   | reject('search', 'chores_completed_')
+                   | sort -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}

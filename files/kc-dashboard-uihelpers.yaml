@@ -1,8 +1,23 @@
+########################################################################################################################
+#                          ⚠️  DEPRECATED IN KIDSCHORES v4.0+  ⚠️
+#
+# This file is NO LONGER REQUIRED for KidsChores v4.0 and later.
+# The datetime helper functionality is now built into the dashboard helper sensor.
+#
+# This file is kept for reference only and can be deleted if you're running v4.0+.
+#
+# ⚠️  MIGRATION REQUIRED:
+# If you have the following in your Home Assistant configuration, REMOVE them:
+#  • input_datetime.kc_ui_set_date_helper (the datetime input helper)
+#  • This automation (if created manually in automations.yaml)
+# These are no longer needed as the integration handles this functionality.
+########################################################################################################################
+
 # The following is an optional automation you can add to continuously reset the chore datetime selector to tomorrow at 11PM
 # Recommendation is to create this via the UI Settings \ Automations & Scenes
 
 ########################################################################################################################
-###################### Copy paste version of automation for creating the automation in the UI ##########################         
+###################### Copy paste version of automation for creating the automation in the UI ##########################
 alias: "Update KidsChore UI Helpers"
 triggers:
   - trigger: homeassistant
