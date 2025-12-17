@@ -800,7 +800,8 @@ sections:
                 {%- endif -%}
 
                 {#-- 3. Collect Data --#}
-                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set helper_attrs = states[dashboard_helper].attributes -%}
+                {%- set ui = helper_attrs.ui_translations | default({}, true) -%}
                 {%- set points = states(points_sensor) | int(default=0) -%}
                 {%- set points_earned_all_time = state_attr(points_sensor, 'point_stat_points_earned_all_time') | int(default=0) -%}
                 {%- set all_time_completed = state_attr(all_time_sensor, 'chore_stat_approved_all_time') | int(default=0) -%}
@@ -808,12 +809,12 @@ sections:
                 {%- set highest_badge_icon = state_attr(highest_badge_entity, 'icon') or 'mdi:medal-outline' -%}
                 {%- set highest_badge_multiplier = (state_attr(highest_badge_entity, 'awards') or {}).get('points_multiplier') | float(1) -%}
                 {%- set all_badges = state_attr(highest_badge_entity, 'all_earned_badges') | default([], true) -%}
-                {%- set reward_list = state_attr(dashboard_helper, 'rewards') | default([], true) -%}
-                {%- set badge_list = state_attr(dashboard_helper, 'badges') | default([], true) -%}
-                {%- set bonus_list = state_attr(dashboard_helper, 'bonuses') | default([], true) -%}
-                {%- set penalty_list = state_attr(dashboard_helper, 'penalties') | default([], true) -%}
-                {%- set achievement_list = state_attr(dashboard_helper, 'achievements') | default([], true) -%}
-                {%- set challenge_list = state_attr(dashboard_helper, 'challenges') | default([], true) -%}
+                {%- set reward_list = helper_attrs.rewards | default([], true) -%}
+                {%- set badge_list = helper_attrs.badges | default([], true) -%}
+                {%- set bonus_list = helper_attrs.bonuses | default([], true) -%}
+                {%- set penalty_list = helper_attrs.penalties | default([], true) -%}
+                {%- set achievement_list = helper_attrs.achievements | default([], true) -%}
+                {%- set challenge_list = helper_attrs.challenges | default([], true) -%}
                 {#-- 4. Build Display --#}
                 {%- set badge_display_line = ui.get('none', 'err-none') if highest_badge in ['None', 'unknown', 'Unknown', 'unavailable'] else "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge -%}
 
@@ -1015,18 +1016,16 @@ sections:
 
             {#-- Extract Live Maintenance Details (if valid) --#}
             {%- if hb_state not in ['unknown', 'unavailable'] -%}
-              {%- set ns.points_to_next = state_attr(ns.highest_badge_sensor, 'points_to_next_badge') | int(default=0) -%}
-              {%- if ns.points_to_next is none -%}
-                {%- set ns.points_to_next = 0 -%}
-              {%- endif -%}
-              {%- set ns.m_status = state_attr(ns.highest_badge_sensor, 'badge_status') | default('active') -%}
-              {%- set ns.m_cycle_pts = state_attr(ns.highest_badge_sensor, 'cycle_points') | int(default=0) -%}
-              {%- set ns.m_end_date = state_attr(ns.highest_badge_sensor, 'maintenance_end_date') -%}
-              {%- set ns.m_grace_end = state_attr(ns.highest_badge_sensor, 'maintenance_grace_end_date') -%}
-              {%- set ns.m_required = state_attr(ns.highest_badge_sensor, 'maintenance_points_required') | int(default=0) -%}
-              {%- set ns.m_remaining = state_attr(ns.highest_badge_sensor, 'maintenance_points_remaining') | int(default=0) -%}
-              {%- set ns.m_last_awarded = state_attr(ns.highest_badge_sensor, 'last_awarded_date') -%}
-              {%- set ns.m_award_count = state_attr(ns.highest_badge_sensor, 'award_count') | int(default=0) -%}
+              {%- set hb_attrs = states[ns.highest_badge_sensor].attributes | default({}, true) -%}
+              {%- set ns.points_to_next = hb_attrs.get('points_to_next_badge', 0) | int(default=0) -%}
+              {%- set ns.m_status = hb_attrs.get('badge_status', 'active') | default('active') -%}
+              {%- set ns.m_cycle_pts = hb_attrs.get('cycle_points', 0) | int(default=0) -%}
+              {%- set ns.m_end_date = hb_attrs.get('maintenance_end_date') -%}
+              {%- set ns.m_grace_end = hb_attrs.get('maintenance_grace_end_date') -%}
+              {%- set ns.m_required = hb_attrs.get('maintenance_points_required', 0) | int(default=0) -%}
+              {%- set ns.m_remaining = hb_attrs.get('maintenance_points_remaining', 0) | int(default=0) -%}
+              {%- set ns.m_last_awarded = hb_attrs.get('last_awarded_date') -%}
+              {%- set ns.m_award_count = hb_attrs.get('award_count', 0) | int(default=0) -%}
             {%- endif -%}
 
             {#-- Collect Badge Sensors: Three badges from highest_badge sensor --#}
@@ -1286,25 +1285,26 @@ sections:
             {%- set badge_list = state_attr(dashboard_helper, 'badges') | default([], true) -%}
             {%- for badge in badge_list -%}
               {%- set badge_sensor_id = badge.eid if badge is mapping else badge -%}
+              {%- set badge_attrs = states[badge_sensor_id].attributes | default({}, true) -%}
 
               {#-- Filter by Assigned Kids --#}
-              {%- set assigned = state_attr(badge_sensor_id, 'kids_assigned') -%}
+              {%- set assigned = badge_attrs.get('kids_assigned') -%}
               {%- if assigned is iterable and assigned is not string and assigned | length > 0 and name not in assigned -%}
                 {%- continue -%}
               {%- endif -%}
 
               {%- set badge_info = {
                 'entity_id': badge_sensor_id,
-                'name': state_attr(badge_sensor_id, 'name') | default('Unknown Badge'),
-                'icon': state_attr(badge_sensor_id, 'icon') | default('mdi:medal-outline'),
-                'description': state_attr(badge_sensor_id, 'description') | default(''),
-                'type': state_attr(badge_sensor_id, 'badge_type') | default('unknown'),
-                'status': state_attr(badge_sensor_id, 'status') | default('in_progress'),
+                'name': badge_attrs.get('name', 'Unknown Badge') | default('Unknown Badge'),
+                'icon': badge_attrs.get('icon', 'mdi:medal-outline') | default('mdi:medal-outline'),
+                'description': badge_attrs.get('description', '') | default(''),
+                'type': badge_attrs.get('badge_type', 'unknown') | default('unknown'),
+                'status': badge_attrs.get('status', 'in_progress') | default('in_progress'),
                 'progress': states(badge_sensor_id) | float(default=0),
-                'start_date': state_attr(badge_sensor_id, 'start_date'),
-                'end_date': state_attr(badge_sensor_id, 'end_date'),
-                'award_count': state_attr(badge_sensor_id, 'award_count') | int(default=0),
-                'last_awarded': state_attr(badge_sensor_id, 'last_awarded_date')
+                'start_date': badge_attrs.get('start_date'),
+                'end_date': badge_attrs.get('end_date'),
+                'award_count': badge_attrs.get('award_count', 0) | int(default=0),
+                'last_awarded': badge_attrs.get('last_awarded_date')
               } -%}
               {%- set ns.badges = ns.badges + [badge_info] -%}
             {%- endfor -%}
@@ -1683,21 +1683,23 @@ sections:
                 {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
 
                 {%- set points = states(points_sensor) | int(default=0) -%}
-                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
-                {%- set points_icon = state_attr(points_sensor, 'icon') -%}
+                {%- set points_attrs = states[points_sensor].attributes | default({}, true) -%}
+                {%- set points_label = points_attrs.get('unit_of_measurement') | default('Pts') -%}
+                {%- set points_icon = points_attrs.get('icon') -%}
 
                 {#-- Points Stats from kid_points --#}
-                {%- set points_earned_week = state_attr(points_sensor, 'point_stat_points_earned_week') | int(default=0) -%}
-                {%- set points_spent_week = state_attr(points_sensor, 'point_stat_points_spent_week') | int(default=0) -%}
+                {%- set points_earned_week = points_attrs.get('point_stat_points_earned_week', 0) | int(default=0) -%}
+                {%- set points_spent_week = points_attrs.get('point_stat_points_spent_week', 0) | int(default=0) -%}
 
                 {#-- Chore Stats from kid_chores_completed_total --#}
-                {%- set weekly_completed = state_attr(total_chores_sensor, 'chore_stat_approved_week') | int(default=0) -%}
-                {%- set chore_longest_streak = state_attr(total_chores_sensor, 'chore_stat_longest_streak_week') | int(default=0) -%}
-                {%- set most_completed_chore = state_attr(total_chores_sensor, 'chore_stat_most_completed_chore_week') | default('N/A') -%}
-                {%- set avg_chores_per_day_week = state_attr(total_chores_sensor, 'chore_stat_avg_per_day_week') | float(default=0) -%}
-                {%- set current_claimed = state_attr(total_chores_sensor, 'chore_stat_current_claimed') | int(default=0) -%}
-                {%- set current_overdue = state_attr(total_chores_sensor, 'chore_stat_current_overdue') | int(default=0) -%}
-                {%- set weekly_overdue = state_attr(total_chores_sensor, 'chore_stat_overdue_week') | int(default=0) -%}
+                {%- set chores_attrs = states[total_chores_sensor].attributes | default({}, true) -%}
+                {%- set weekly_completed = chores_attrs.get('chore_stat_approved_week', 0) | int(default=0) -%}
+                {%- set chore_longest_streak = chores_attrs.get('chore_stat_longest_streak_week', 0) | int(default=0) -%}
+                {%- set most_completed_chore = chores_attrs.get('chore_stat_most_completed_chore_week', 'N/A') | default('N/A') -%}
+                {%- set avg_chores_per_day_week = chores_attrs.get('chore_stat_avg_per_day_week', 0) | float(default=0) -%}
+                {%- set current_claimed = chores_attrs.get('chore_stat_current_claimed', 0) | int(default=0) -%}
+                {%- set current_overdue = chores_attrs.get('chore_stat_current_overdue', 0) | int(default=0) -%}
+                {%- set weekly_overdue = chores_attrs.get('chore_stat_overdue_week', 0) | int(default=0) -%}
 
                 {#-- Badge Stats from highest_badge --#}
                 {%- set highest_badge = states(highest_badge_sensor) or 'None' -%}
@@ -1866,11 +1868,11 @@ sections:
                 {%- endif -%}
 
                 {#-- 3. Collect Data --#}
-                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
-
-                {%- set pending_chore_data = state_attr('sensor.kc_global_chore_pending_approvals', name) | default([], true) if states('sensor.kc_global_chore_pending_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_pending_chore_approvals', name) | default([], true) if states('sensor.kc_pending_chore_approvals') not in ['unavailable', 'unknown'] else [] -%}
-
-                {%- set pending_reward_data = state_attr('sensor.kc_global_reward_pending_approvals', name) | default([], true) if states('sensor.kc_global_reward_pending_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_global_pending_reward_approvals', name) | default([], true) if states('sensor.kc_global_pending_reward_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_pending_reward_approvals', name) | default([], true) if states('sensor.kc_pending_reward_approvals') not in ['unavailable', 'unknown'] else [] -%}
+                {%- set helper_attrs = states[dashboard_helper].attributes -%}
+                {%- set ui = helper_attrs.ui_translations | default({}, true) -%}
+                {%- set pending_approvals = helper_attrs.pending_approvals | default({}, true) -%}
+                {%- set pending_chore_data = pending_approvals.get('chores', []) | default([], true) -%}
+                {%- set pending_reward_data = pending_approvals.get('rewards', []) | default([], true) -%}
 
                 {#-- 4. Build Display --#}
                 {%- if pending_chore_data | count > 0 -%}
@@ -2393,11 +2395,12 @@ sections:
                 {%- if not skip_render -%}
                   {%- for bonus in bonus_list -%}
                   {%- set bonus_sensor_id = bonus.eid if bonus is mapping else bonus -%}
-                  {%- set bonus_name = state_attr(bonus_sensor_id, 'bonus_name') | default('Unknown Bonus') -%}
-                  {%- set bonus_icon = state_attr(bonus_sensor_id, 'icon') | default('mdi:star') -%}
-                  {%- set bonus_points = state_attr(bonus_sensor_id, 'bonus_points') | int(default=0) -%}
+                  {%- set bonus_attrs = states[bonus_sensor_id].attributes | default({}, true) -%}
+                  {%- set bonus_name = bonus_attrs.get('bonus_name', 'Unknown Bonus') | default('Unknown Bonus') -%}
+                  {%- set bonus_icon = bonus_attrs.get('icon', 'mdi:star') | default('mdi:star') -%}
+                  {%- set bonus_points = bonus_attrs.get('bonus_points', 0) | int(default=0) -%}
                   {%- set bonuses_applied = states(bonus_sensor_id) | int(default=0) -%}
-                  {%- set bonus_button_eid = state_attr(bonus_sensor_id, 'bonus_button_eid') | default('') -%}
+                  {%- set bonus_button_eid = bonus_attrs.get('bonus_button_eid', '') | default('') -%}
 
                   {%- set icon_color =
                     '#00FF00' if bonus_points >= 20 else
@@ -2518,11 +2521,12 @@ sections:
                 {%- if not skip_render -%}
                   {%- for penalty in penalty_list -%}
                   {%- set penalty_sensor_id = penalty.eid if penalty is mapping else penalty -%}
-                  {%- set penalty_name = state_attr(penalty_sensor_id, 'penalty_name') | default('Unknown Penalty') -%}
-                  {%- set penalty_icon = state_attr(penalty_sensor_id, 'icon') | default('mdi:alert') -%}
-                  {%- set penalty_points = state_attr(penalty_sensor_id, 'penalty_points') | int(default=0) -%}
+                  {%- set penalty_attrs = states[penalty_sensor_id].attributes | default({}, true) -%}
+                  {%- set penalty_name = penalty_attrs.get('penalty_name', 'Unknown Penalty') | default('Unknown Penalty') -%}
+                  {%- set penalty_icon = penalty_attrs.get('icon', 'mdi:alert') | default('mdi:alert') -%}
+                  {%- set penalty_points = penalty_attrs.get('penalty_points', 0) | int(default=0) -%}
                   {%- set penalties_applied = states(penalty_sensor_id) | int(default=0) -%}
-                  {%- set penalty_button_eid = state_attr(penalty_sensor_id, 'penalty_button_eid') | default('') -%}
+                  {%- set penalty_button_eid = penalty_attrs.get('penalty_button_eid', '') | default('') -%}
 
                   {%- set icon_color =
                     '#FF4500' if penalty_points >= 20 else
