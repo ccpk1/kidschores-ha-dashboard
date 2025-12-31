@@ -21,6 +21,42 @@ This directory contains test files and documentation for validating the KidsChor
 
 ---
 
+### `test_null_eid_handling.jinja2`
+
+**Purpose:** Test graceful handling of badges with null entity IDs.
+
+**Background:** When a new badge is created in the integration, there's a system issue that prevents the `eid` (entity ID) from being immediately available in the dashboard helper sensor. The badge appears with `eid: null` which would normally cause template errors.
+
+**How to Use:**
+
+1. Open Home Assistant
+2. Go to Developer Tools → Template
+3. Copy and paste the entire file contents
+4. Review test results
+
+**What It Tests:**
+
+- ✅ Badges with `eid: null` are gracefully skipped
+- ✅ Badges with valid `eid` values are processed normally
+- ✅ Mixed badge lists (some null, some valid) work correctly
+- ✅ Empty badge lists don't cause errors
+- ✅ String `'null'` values are also filtered out
+
+**Expected Results:** All 5 tests show ✅ PASS, indicating the dashboard will handle null eid values without logging errors.
+
+**Dashboard Fix Applied:**
+The showcase card and general badge card now include this protection:
+
+```jinja2
+{%- set badge_entity = badge.eid if badge is mapping else badge -%}
+{#-- Skip badges with null eid (newly created, not yet assigned entity ID) --#}
+{%- if not badge_entity or badge_entity == 'null' or badge_entity == None -%}
+  {%- continue -%}
+{%- endif -%}
+```
+
+---
+
 ### `test_validation_snippet.jinja2`
 
 **Purpose:** Quick validation tests using Jinja2 template syntax.

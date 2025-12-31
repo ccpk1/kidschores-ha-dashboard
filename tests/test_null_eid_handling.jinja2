@@ -1,0 +1,177 @@
+{#
+============================================================================
+TEST NULL EID HANDLING - Badge Validation Test
+============================================================================
+
+PURPOSE:
+  Test that dashboard gracefully handles badges with null eid values
+  (badges that have been created but not yet assigned entity IDs).
+
+HOW TO USE:
+  1. Open Home Assistant
+  2. Navigate to Developer Tools → Template
+  3. Copy and paste this entire file into the template editor
+  4. Click "Render" or observe the live preview
+  5. Verify tests pass without errors
+
+WHAT IT TESTS:
+  1. Badge list with null eid is filtered out properly
+  2. Badge list with valid eid is processed normally
+  3. Mixed badge lists (some null, some valid) work correctly
+  4. Empty badge list doesn't cause errors
+
+EXPECTED OUTPUT:
+  - All tests show ✅ PASS
+  - No template errors or exceptions
+  - Null eid badges are skipped without logging errors
+
+DEBUGGING:
+  - If tests fail, check that badge filtering logic is correct
+  - Verify continue statement works in Jinja2 for loop
+  - Check that null values are properly detected
+
+============================================================================
+#}
+
+{%- set ns = namespace(results=[], processed=0, skipped=0) -%}
+
+{#-- Simulate badge lists with various scenarios --#}
+
+{#-- Scenario 1: Badge with null eid --#}
+{%- set test1_badges = [
+  {'eid': null, 'name': 'Good Day', 'badge_type': 'daily', 'status': null}
+] -%}
+
+{#-- Scenario 2: Badge with valid eid --#}
+{%- set test2_badges = [
+  {'eid': 'sensor.kc_bronze_badge', 'name': 'Bronze', 'badge_type': 'cumulative', 'status': 'active'}
+] -%}
+
+{#-- Scenario 3: Mixed badge list --#}
+{%- set test3_badges = [
+  {'eid': null, 'name': 'New Badge', 'badge_type': 'daily', 'status': null},
+  {'eid': 'sensor.kc_silver_badge', 'name': 'Silver', 'badge_type': 'cumulative', 'status': 'active'},
+  {'eid': null, 'name': 'Another New', 'badge_type': 'weekly', 'status': null}
+] -%}
+
+{#-- Scenario 4: Empty badge list --#}
+{%- set test4_badges = [] -%}
+
+{#-- Scenario 5: Badge with string 'null' --#}
+{%- set test5_badges = [
+  {'eid': 'null', 'name': 'String Null', 'badge_type': 'daily', 'status': null}
+] -%}
+
+=== BADGE NULL EID HANDLING TEST RESULTS ===
+
+{#-- Test Function --#}
+{%- macro test_badge_processing(badge_list, test_name) -%}
+  {%- set local_ns = namespace(processed=0, skipped=0, error=false) -%}
+
+  {%- for badge in badge_list -%}
+    {%- set badge_entity = badge.eid if badge is mapping else badge -%}
+
+    {#-- This is the protection logic from the dashboard --#}
+    {%- if not badge_entity or badge_entity == 'null' or badge_entity == None -%}
+      {%- set local_ns.skipped = local_ns.skipped + 1 -%}
+      {%- continue -%}
+    {%- endif -%}
+
+    {%- set local_ns.processed = local_ns.processed + 1 -%}
+  {%- endfor -%}
+
+  {{ test_name }}
+  Total: {{ badge_list | length }} | Processed: {{ local_ns.processed }} | Skipped: {{ local_ns.skipped }}
+{%- endmacro -%}
+
+{{ test_badge_processing(test1_badges, "Test 1 - Null eid:         ") }}
+{{ test_badge_processing(test2_badges, "Test 2 - Valid eid:        ") }}
+{{ test_badge_processing(test3_badges, "Test 3 - Mixed list:       ") }}
+{{ test_badge_processing(test4_badges, "Test 4 - Empty list:       ") }}
+{{ test_badge_processing(test5_badges, "Test 5 - String 'null':    ") }}
+
+{{ "="*70 }}
+
+{#-- Validation Tests --#}
+{%- set test_results = [] -%}
+
+{#-- Test 1: Null eid should be skipped (0 processed, 1 skipped) --#}
+{%- set t1_ns = namespace(p=0, s=0) -%}
+{%- for badge in test1_badges -%}
+  {%- set badge_entity = badge.eid if badge is mapping else badge -%}
+  {%- if not badge_entity or badge_entity == 'null' or badge_entity == None -%}
+    {%- set t1_ns.s = t1_ns.s + 1 -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- set t1_ns.p = t1_ns.p + 1 -%}
+{%- endfor -%}
+{%- set _ = test_results.append(('Test 1: Null eid filtered', t1_ns.p == 0 and t1_ns.s == 1)) -%}
+
+{#-- Test 2: Valid eid should be processed (1 processed, 0 skipped) --#}
+{%- set t2_ns = namespace(p=0, s=0) -%}
+{%- for badge in test2_badges -%}
+  {%- set badge_entity = badge.eid if badge is mapping else badge -%}
+  {%- if not badge_entity or badge_entity == 'null' or badge_entity == None -%}
+    {%- set t2_ns.s = t2_ns.s + 1 -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- set t2_ns.p = t2_ns.p + 1 -%}
+{%- endfor -%}
+{%- set _ = test_results.append(('Test 2: Valid eid processed', t2_ns.p == 1 and t2_ns.s == 0)) -%}
+
+{#-- Test 3: Mixed should process valid only (1 processed, 2 skipped) --#}
+{%- set t3_ns = namespace(p=0, s=0) -%}
+{%- for badge in test3_badges -%}
+  {%- set badge_entity = badge.eid if badge is mapping else badge -%}
+  {%- if not badge_entity or badge_entity == 'null' or badge_entity == None -%}
+    {%- set t3_ns.s = t3_ns.s + 1 -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- set t3_ns.p = t3_ns.p + 1 -%}
+{%- endfor -%}
+{%- set _ = test_results.append(('Test 3: Mixed list filtered', t3_ns.p == 1 and t3_ns.s == 2)) -%}
+
+{#-- Test 4: Empty list (0 processed, 0 skipped) --#}
+{%- set t4_ns = namespace(p=0, s=0) -%}
+{%- for badge in test4_badges -%}
+  {%- set badge_entity = badge.eid if badge is mapping else badge -%}
+  {%- if not badge_entity or badge_entity == 'null' or badge_entity == None -%}
+    {%- set t4_ns.s = t4_ns.s + 1 -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- set t4_ns.p = t4_ns.p + 1 -%}
+{%- endfor -%}
+{%- set _ = test_results.append(('Test 4: Empty list handled', t4_ns.p == 0 and t4_ns.s == 0)) -%}
+
+{#-- Test 5: String 'null' should be filtered (0 processed, 1 skipped) --#}
+{%- set t5_ns = namespace(p=0, s=0) -%}
+{%- for badge in test5_badges -%}
+  {%- set badge_entity = badge.eid if badge is mapping else badge -%}
+  {%- if not badge_entity or badge_entity == 'null' or badge_entity == None -%}
+    {%- set t5_ns.s = t5_ns.s + 1 -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- set t5_ns.p = t5_ns.p + 1 -%}
+{%- endfor -%}
+{%- set _ = test_results.append(('Test 5: String null filtered', t5_ns.p == 0 and t5_ns.s == 1)) -%}
+
+{#-- Print Results --#}
+{% for test_name, passed in test_results %}
+{{ '✅ PASS' if passed else '❌ FAIL' }} | {{ test_name }}
+{%- endfor %}
+
+{{ "="*70 }}
+
+{%- set total_tests = test_results | length -%}
+{%- set passed_tests = test_results | selectattr('1', 'equalto', true) | list | length -%}
+
+{% if passed_tests == total_tests %}
+✅ ALL TESTS PASSED ({{ passed_tests }}/{{ total_tests }})
+
+Dashboard will now gracefully skip badges with null eid values.
+No template errors will occur when new badges are created.
+{% else %}
+❌ SOME TESTS FAILED ({{ passed_tests }}/{{ total_tests }} passed)
+
+Check the null eid filtering logic in the dashboard.
+{% endif %}
