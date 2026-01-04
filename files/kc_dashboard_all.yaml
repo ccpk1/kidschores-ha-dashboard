@@ -398,7 +398,7 @@ sections:
                     {%- for chore_sensor_id in group.buttons -%}
                       {%- set claim_button_eid = state_attr(chore_sensor_id, 'claim_button_eid') | default('', true) -%}
                       {%- set chore_name = state_attr(chore_sensor_id, 'chore_name') | default('Unknown') -%}
-                      {%- set shared_chore = state_attr(chore_sensor_id, 'shared_chore') -%}
+                      {%- set shared_chore = state_attr(chore_sensor_id, 'completion_criteria') != 'independent' -%}
                       {%- set primary = chore_name ~ (' (S)' if shared_chore else '') -%}
                       {%- set button_state = states(claim_button_eid) if claim_button_eid else 'unknown' -%}
                       {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') | string -%}
@@ -412,7 +412,8 @@ sections:
                           (due_date.strftime('%-I:%M %p') if due_date.date() == today else as_timestamp(due_date) | timestamp_custom('%a %b %-d', true))
                       -%}
 
-                      {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
+                      {%- set approval_reset_type = state_attr(chore_sensor_id, 'approval_reset_type') -%}
+                      {%- set multi_approve = approval_reset_type and '_multi' in approval_reset_type -%}
                       {%- set chore_state = states(chore_sensor_id) -%}
                       {%- set state_map = {
                           'pending': ui.get('pending', 'err-pending'),
@@ -438,6 +439,7 @@ sections:
                             'orange' if chore_state == 'claimed' else
                             'red' if chore_state == 'overdue' else
                             'purple' if '_in_part' in global_chore_state else
+                            'grey' if chore_state == 'completed_by_other' else
                             'grey'
                           ) -%}
                       {%- set badge_color = (
@@ -447,6 +449,7 @@ sections:
                             'green' if chore_state == 'claimed' else
                             'red' if chore_state == 'overdue' else
                             'purple' if '_in_part' in global_chore_state else
+                            'blue' if chore_state == 'completed_by_other' else
                             'grey'
                           ) -%}
                       {%- set badge_icon = (
@@ -455,6 +458,7 @@ sections:
                             'mdi:check-bold' if chore_state == 'claimed' else
                             'mdi:exclamation-thick' if chore_state == 'overdue' else
                             'mdi:account-group' if '_in_part' in global_chore_state else
+                            'mdi:lock' if chore_state == 'completed_by_other' else
                             ''
                           ) -%}
                       {#-- Add chore card to the group_cards list --#}
@@ -785,6 +789,7 @@ sections:
                   penalties=[],
                   achievements=[],
                   challenges=[],
+                  earned_badges_display='',
                   content=''
                 ) -%}
 
@@ -920,23 +925,22 @@ sections:
                 {#-- Create Content Variable --#}
 
                 {#-- Format earned badges as bullet list --#}
-                {%- set earned_badges_display = '' -%}
                 {%- if all_badges | length > 0 -%}
                   {%- for badge_name in all_badges -%}
-                    {%- set earned_badges_display = earned_badges_display ~ '\n- ' ~ badge_name -%}
+                    {%- set ns.earned_badges_display = ns.earned_badges_display ~ '\n- ' ~ badge_name -%}
                   {%- endfor -%}
                 {%- else -%}
-                  {%- set earned_badges_display = '&nbsp;' ~ ui.get('none', 'err-none') -%}
+                  {%- set ns.earned_badges_display = '&nbsp;' ~ ui.get('none', 'err-none') -%}
                 {%- endif -%}
 
                 {%- set ns.content =
                   "## 🏅 " ~ name ~ "’s " ~ ui.get('showcase', 'err-showcase') ~ "  \n"
-                  "<ha-icon icon=" ~ points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ points_label ~ ":** &nbsp;&nbsp;" ~ points ~ " \n\n"
+                  "<ha-icon icon=" ~ points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ points_label ~ ":** &nbsp;&nbsp;" ~ points ~ " "
                   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**" ~ ui.get('earned_all_time', 'err-earned_all_time') ~ ":** &nbsp;&nbsp;" ~ points_earned_all_time ~ " \n\n"
                   "<ha-icon icon=" ~ 'mdi:broom' ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ui.get('total_completed', 'err-total_completed') ~ ":** &nbsp;&nbsp;" ~ all_time_completed ~ " \n\n"
                   "**🥇 " ~ ui.get('highest_badge_earned', 'err-highest_badge_earned') ~ ":** &nbsp;&nbsp;" ~ badge_display_line ~ "  \n"
                   "**💎 " ~ points_label ~ " " ~ ui.get('multiplier', 'err-multiplier') ~ ":** &nbsp;&nbsp;x" ~ highest_badge_multiplier ~ "  \n\n"
-                  "**🥇 " ~ ui.get('all_earned_badges', 'err-all_earned_badges') ~ ":**  " ~ earned_badges_display ~ "  \n"
+                  "**🥇 " ~ ui.get('all_earned_badges', 'err-all_earned_badges') ~ ":**  " ~ ns.earned_badges_display ~ "  \n"
                   "#### 🎁 " ~ ui.get('rewards', 'err-rewards') ~ ": &nbsp;&nbsp;" ~
                   ("\n" ~ ('\n'.join(ns.reward_progress)) if ns.reward_progress | length > 0 else ui.get('none', 'err-none')) ~ "  \n\n"
                   "#### ⭐ " ~ ui.get('bonuses_applied', 'err-bonuses_applied') ~ ": &nbsp;&nbsp;" ~
@@ -1300,12 +1304,6 @@ sections:
                 {%- continue -%}
               {%- endif -%}
               {%- set badge_attrs = states[badge_sensor_id].attributes | default({}, true) -%}
-
-              {#-- Filter by Assigned Kids --#}
-              {%- set assigned = badge_attrs.get('kids_assigned') -%}
-              {%- if assigned is iterable and assigned is not string and assigned | length > 0 and name not in assigned -%}
-                {%- continue -%}
-              {%- endif -%}
 
               {%- set badge_info = {
                 'entity_id': badge_sensor_id,
@@ -1777,11 +1775,11 @@ sections:
                 {#-- Row 3: Average per Day --#}
                 {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>📊 " ~ ui.get('chores_per_day', 'err-chores_per_day') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ avg_chores_per_day_week | round(2) ~ "</td></tr>" -%}
 
-                {#-- Row 4: Longest Streak --#}
-                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>🔥 " ~ ui.get('longest_streak', 'err-longest_streak') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ chore_longest_streak ~ " days</td></tr>" -%}
-
-                {#-- Row 5: Most Completed Chore --#}
+                {#-- Row 4: Most Completed Chore --#}
                 {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>🏆 " ~ ui.get('most_completions', 'err-most_completions') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ most_completed_chore ~ "</td></tr>" -%}
+
+                {#-- Row 5: Longest Streak --#}
+                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>🔥 " ~ ui.get('longest_streak', 'err-longest_streak') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ chore_longest_streak ~ " days</td></tr>" -%}
 
                 {#-- Row 6: Weekly Overdue --#}
                 {%- if weekly_overdue > 0 -%}
