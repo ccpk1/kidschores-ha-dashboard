@@ -1985,7 +1985,11 @@ sections:
                         'layout': '',
                         'icon_color': icon_color,
                         'tap_action': {
-                          'action': 'toggle'
+                          'action': 'call-service',
+                          'service': 'button.press',
+                          'target': {
+                            'entity_id': eid
+                          }
                         },
                         'hold_action': {
                           'action': 'more-info'
@@ -2542,7 +2546,11 @@ sections:
                     'icon': bonus_icon,
                     'icon_color': icon_color,
                     'tap_action': {
-                      'action': 'toggle'
+                      'action': 'call-service',
+                      'service': 'button.press',
+                      'target': {
+                        'entity_id': bonus_button_eid
+                      }
                     },
                     'hold_action': {
                       'action': 'more-info'
@@ -2599,7 +2607,11 @@ sections:
                     'icon_color': icon_color,
                     'layout': 'vertical',
                     'tap_action': {
-                      'action': 'toggle'
+                      'action': 'call-service',
+                      'service': 'button.press',
+                      'target': {
+                        'entity_id': button_eid
+                      }
                     },
                     'hold_action': {
                       'action': 'more-info'
@@ -2669,7 +2681,11 @@ sections:
                     'icon': penalty_icon,
                     'icon_color': icon_color,
                     'tap_action': {
-                      'action': 'toggle'
+                      'action': 'call-service',
+                      'service': 'button.press',
+                      'target': {
+                        'entity_id': penalty_button_eid
+                      }
                     },
                     'hold_action': {
                       'action': 'more-info'

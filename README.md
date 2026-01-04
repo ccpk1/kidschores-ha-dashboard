@@ -350,9 +350,9 @@ This dashboard requires **custom frontend cards** to function correctly.
 1. **Open Home Assistant**
 2. **Go to HACS → Frontend**
 3. **Search and install the following cards:**
-   - 🟢 **Mushroom Cards** (`custom:mushroom-template-card`)
-   - 🟢 **Auto-Entities** (`custom:auto-entities`)
-   - 🟢 **Mini Graph Card** (`custom:mini-graph-card`)
+   - 🟢 [**Mushroom Cards**](https://github.com/piitaya/lovelace-mushroom) (`custom:mushroom-template-card`)
+   - 🟢 [**Auto-Entities**](https://github.com/thomasloven/lovelace-auto-entities) (`custom:auto-entities`)
+   - 🟢 [**Mini Graph Card**](https://github.com/kalkih/mini-graph-card) (`custom:mini-graph-card`)
 4. **Restart Home Assistant** to apply the changes.
 
 ---
