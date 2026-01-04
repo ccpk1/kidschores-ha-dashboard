@@ -924,10 +924,12 @@ sections:
 
                 {#-- Create Content Variable --#}
 
-                {#-- Format earned badges as bullet list --#}
-                {%- if all_badges | length > 0 -%}
-                  {%- for badge_name in all_badges -%}
-                    {%- set ns.earned_badges_display = ns.earned_badges_display ~ '\n- ' ~ badge_name -%}
+                {#-- Format earned badges as bullet list with icons --#}
+                {%- set earned_badges = badge_list | selectattr('earned', 'equalto', true) | list -%}
+                {%- if earned_badges | length > 0 -%}
+                  {%- for badge in earned_badges -%}
+                    {%- set badge_icon = state_attr(badge.eid, 'icon') | default('mdi:medal-outline') -%}
+                    {%- set ns.earned_badges_display = ns.earned_badges_display ~ '\n- <ha-icon icon=\'' ~ badge_icon ~ '\'></ha-icon> ' ~ badge.name -%}
                   {%- endfor -%}
                 {%- else -%}
                   {%- set ns.earned_badges_display = '&nbsp;' ~ ui.get('none', 'err-none') -%}
@@ -1301,6 +1303,10 @@ sections:
               {%- set badge_sensor_id = badge.eid if badge is mapping else badge -%}
               {#-- Skip badges with null eid (newly created, not yet assigned entity ID) --#}
               {%- if not badge_sensor_id or badge_sensor_id == 'null' or badge_sensor_id == None -%}
+                {%- continue -%}
+              {%- endif -%}
+              {#-- Skip cumulative badges (only show periodic/achievement badges) --#}
+              {%- if badge.badge_type == 'cumulative' -%}
                 {%- continue -%}
               {%- endif -%}
               {%- set badge_attrs = states[badge_sensor_id].attributes | default({}, true) -%}
