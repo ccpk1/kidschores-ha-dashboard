@@ -18,11 +18,11 @@ sections:
               template: >-
                 {#-- ============================================= --#}
 
-                {#-- ========== Version KCD_0.4.0beta2 =========== --#}
+                {#-- ============= Version KCD_0.5.0 ============= --#}
 
                 {#-- ============================================= --#}
 
-                {#-- Requires KidsChores Integration 0.4.0 beta 2 --#}
+                {#-- Requires KidsChores Integration 0.5.0  --#}
 
                 {#-- Language translation now managed by the integration --#}
 
@@ -860,11 +860,11 @@ sections:
                 {%- endfor -%}
 
                 {%- for bonus in bonus_list -%}
-                  {%- set bonus_sensor = bonus.eid if bonus is mapping else bonus -%}
-                  {%- set bonus_name = (bonus.name | default('Unknown Bonus')) if bonus is mapping else state_attr(bonus_sensor, 'bonus_name') | default('Unknown Bonus') -%}
-                  {%- set bonus_icon = state_attr(bonus_sensor, 'icon') | default('mdi:alert') -%}
-                  {%- set bonus_points = (bonus.points | float(default=0)) if bonus is mapping else state_attr(bonus_sensor, 'bonus_points') | float(default=0) -%}
-                  {%- set bonus_count = (bonus.applied | int(default=0)) if bonus is mapping else states(bonus_sensor) | int(default=0) -%}
+                  {%- set bonus_button_eid = bonus.eid if bonus is mapping else none -%}
+                  {%- set bonus_name = (bonus.name | default('Unknown Bonus')) if bonus is mapping else 'Unknown Bonus' -%}
+                  {%- set bonus_icon = state_attr(bonus_button_eid, 'icon') | default('mdi:gift') -%}
+                  {%- set bonus_points = (bonus.points | float(default=0)) if bonus is mapping else 0 -%}
+                  {%- set bonus_count = (bonus.applied | int(default=0)) if bonus is mapping else 0 -%}
                   {%- if bonus_count > 0 -%}
                     {%- set ns.total_bonus_points = ns.total_bonus_points + (bonus_points * bonus_count) -%}
                     {%- set ns.bonuses = ns.bonuses + [
@@ -875,11 +875,11 @@ sections:
                 {%- endfor -%}
 
                 {%- for penalty in penalty_list -%}
-                  {%- set penalty_sensor = penalty.eid if penalty is mapping else penalty -%}
-                  {%- set penalty_name = (penalty.name | default('Unknown Penalty')) if penalty is mapping else state_attr(penalty_sensor, 'penalty_name') | default('Unknown Penalty') -%}
-                  {%- set penalty_icon = state_attr(penalty_sensor, 'icon') | default('mdi:alert') -%}
-                  {%- set penalty_points = (penalty.points | float(default=0)) if penalty is mapping else state_attr(penalty_sensor, 'penalty_points') | float(default=0) -%}
-                  {%- set penalty_count = (penalty.applied | int(default=0)) if penalty is mapping else states(penalty_sensor) | int(default=0) -%}
+                  {%- set penalty_button_eid = penalty.eid if penalty is mapping else none -%}
+                  {%- set penalty_name = (penalty.name | default('Unknown Penalty')) if penalty is mapping else 'Unknown Penalty' -%}
+                  {%- set penalty_icon = state_attr(penalty_button_eid, 'icon') | default('mdi:alert-octagon') -%}
+                  {%- set penalty_points = (penalty.points | float(default=0)) if penalty is mapping else 0 -%}
+                  {%- set penalty_count = (penalty.applied | int(default=0)) if penalty is mapping else 0 -%}
                   {%- if penalty_count > 0 -%}
                     {%- set ns.total_penalty_points = ns.total_penalty_points + (penalty_points * penalty_count) -%}
                     {%- set ns.penalties = ns.penalties + [
@@ -2503,13 +2503,11 @@ sections:
                 {#-- *** Section 5: Render *** --#}
                 {%- if not skip_render -%}
                   {%- for bonus in bonus_list -%}
-                  {%- set bonus_sensor_id = bonus.eid if bonus is mapping else bonus -%}
-                  {%- set bonus_attrs = states[bonus_sensor_id].attributes | default({}, true) -%}
-                  {%- set bonus_name = bonus_attrs.get('bonus_name', 'Unknown Bonus') | default('Unknown Bonus') -%}
-                  {%- set bonus_icon = bonus_attrs.get('icon', 'mdi:star') | default('mdi:star') -%}
-                  {%- set bonus_points = bonus_attrs.get('bonus_points', 0) | int(default=0) -%}
-                  {%- set bonuses_applied = states(bonus_sensor_id) | int(default=0) -%}
-                  {%- set bonus_button_eid = bonus_attrs.get('bonus_button_eid', '') | default('') -%}
+                  {%- set bonus_name = (bonus.name | default('Unknown Bonus')) if bonus is mapping else 'Unknown Bonus' -%}
+                  {%- set bonus_button_eid = (bonus.eid | default('')) if bonus is mapping else '' -%}
+                  {%- set bonus_icon = state_attr(bonus_button_eid, 'icon') | default('mdi:gift') -%}
+                  {%- set bonus_points = (bonus.points | default(0)) if bonus is mapping else 0 -%}
+                  {%- set bonuses_applied = (bonus.applied | default(0)) if bonus is mapping else 0 -%}
 
                   {%- set icon_color =
                     '#00FF00' if bonus_points >= 20 else
@@ -2630,13 +2628,11 @@ sections:
                 {#-- *** Section 5: Render *** --#}
                 {%- if not skip_render -%}
                   {%- for penalty in penalty_list -%}
-                  {%- set penalty_sensor_id = penalty.eid if penalty is mapping else penalty -%}
-                  {%- set penalty_attrs = states[penalty_sensor_id].attributes | default({}, true) -%}
-                  {%- set penalty_name = penalty_attrs.get('penalty_name', 'Unknown Penalty') | default('Unknown Penalty') -%}
-                  {%- set penalty_icon = penalty_attrs.get('icon', 'mdi:alert') | default('mdi:alert') -%}
-                  {%- set penalty_points = penalty_attrs.get('penalty_points', 0) | int(default=0) -%}
-                  {%- set penalties_applied = states(penalty_sensor_id) | int(default=0) -%}
-                  {%- set penalty_button_eid = penalty_attrs.get('penalty_button_eid', '') | default('') -%}
+                  {%- set penalty_name = (penalty.name | default('Unknown Penalty')) if penalty is mapping else 'Unknown Penalty' -%}
+                  {%- set penalty_button_eid = (penalty.eid | default('')) if penalty is mapping else '' -%}
+                  {%- set penalty_icon = state_attr(penalty_button_eid, 'icon') | default('mdi:alert-octagon') -%}
+                  {%- set penalty_points = (penalty.points | default(0)) if penalty is mapping else 0 -%}
+                  {%- set penalties_applied = (penalty.applied | default(0)) if penalty is mapping else 0 -%}
 
                   {%- set icon_color =
                     '#FF4500' if penalty_points >= 20 else
