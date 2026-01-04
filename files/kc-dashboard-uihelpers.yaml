@@ -1,7 +1,7 @@
 ########################################################################################################################
-#                          ⚠️  DEPRECATED IN KIDSCHORES v4.0+  ⚠️
+#                          ⚠️  DEPRECATED IN KIDSCHORES v0.5.0+  ⚠️
 #
-# This file is NO LONGER REQUIRED for KidsChores v4.0 and later.
+# This file is NO LONGER REQUIRED for KidsChores v0.5.0 and later.
 # The datetime helper functionality is now built into the dashboard helper sensor.
 #
 # This file is kept for reference only and can be deleted if you're running v4.0+.
