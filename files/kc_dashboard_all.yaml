@@ -1765,13 +1765,13 @@ sections:
                   {%- if current_claimed > 0 -%}
                     {%- set status_table = status_table ~ "🚨 " ~ current_claimed ~ " " ~ ui.get('pending_approvals', 'err-pending_approvals') -%}
                   {%- else -%}
-                    {%- set status_table = status_table ~ "✅ No pending approvals" -%}
+                    {%- set status_table = status_table ~ "✅ " ~ ui.get('no_pending_approvals', 'err-no_pending_approvals') -%}
                   {%- endif -%}
                   {%- set status_table = status_table ~ "</td><td style='padding: 8px; text-align: right;'>" -%}
                   {%- if current_overdue > 0 -%}
                     {%- set status_table = status_table ~ "⚠️ <strong style='color: #d32f2f;'>" ~ current_overdue ~ " " ~ ui.get('overdue_chores', 'err-overdue_chores') ~ "</strong>" -%}
                   {%- else -%}
-                    {%- set status_table = status_table ~ "✅ No overdue" -%}
+                    {%- set status_table = status_table ~ "✅ " ~ ui.get('no_overdue_chores', 'err-no_overdue_chores') -%}
                   {%- endif -%}
                   {%- set status_table = status_table ~ "</td></tr>" -%}
                   {%- set status_table = status_table ~ "</tbody></table>" -%}
