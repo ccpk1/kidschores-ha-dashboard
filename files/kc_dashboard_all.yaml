@@ -1057,8 +1057,8 @@ sections:
               {%- set ns.highest_badge_sensor = core_sensors.get('badges_eid') -%}
               {%- set hb_state = states(ns.highest_badge_sensor) -%}
 
-              {#-- Extract Live Maintenance Details (if valid) --#}
-              {%- if hb_state not in ['unknown', 'unavailable'] -%}
+              {#-- Extract Live Maintenance Details (attributes accessible even if state is unknown) --#}
+              {%- if ns.highest_badge_sensor -%}
                 {%- set hb_attrs = states[ns.highest_badge_sensor].attributes | default({}, true) -%}
                 {%- set ns.points_to_next = hb_attrs.get('points_to_next_badge', 0) | int(default=0) -%}
                 {%- set ns.m_status = hb_attrs.get('badge_status', 'active') | default('active') -%}
