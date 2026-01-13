@@ -1,8 +1,10 @@
 # KidsChores HA Dashboard - AI Agent Guide
 
+ONLY FOR DASHBOARD AGENT USE - DO NOT USE UNLESS ASSIGNED DASHBOARD TASK
+
 **Fully-featured Home Assistant dashboard UI** for [KidsChores Integration](https://github.com/ad-ha/kidschores-ha). Single YAML file (`kc_dashboard_all.yaml`, 1919 lines) with Jinja2 templates that render kid & parent control panels via auto-entities cards.
 
-## Critical Architecture: Dashboard Helper Sensor (v0.4.0+)
+## Critical Architecture: Dashboard Helper Sensor (v0.5.0+)
 
 The `sensor.kc_<kid>_ui_dashboard_helper` is the **single source of truth**:
 
