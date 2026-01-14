@@ -69,7 +69,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
-                  {%- set ui = (state_attr(dashboard_helper, 'ui_translations') or {}) -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points = states(points_sensor) | int(default=0) -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
                   {%- set points_icon = state_attr(points_sensor, 'icon') -%}
@@ -201,7 +202,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
                   {%- set points_icon = state_attr(points_sensor, 'icon') -%}
                   {%- set chore_list = state_attr(dashboard_helper, 'chores') | default([], true) -%}
@@ -578,7 +580,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
                   {%- set points_icon = state_attr(points_sensor, 'icon') -%}
                   {%- set reward_list = state_attr(dashboard_helper, 'rewards') | default([], true) -%}
@@ -821,8 +824,9 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set helper_attrs = states[dashboard_helper].attributes -%}
-                  {%- set ui = helper_attrs.ui_translations | default({}, true) -%}
                   {%- set points_icon = state_attr(points_sensor, 'icon') -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
                   {%- set points = states(points_sensor) | int(default=0) -%}
@@ -1051,7 +1055,8 @@ sections:
             {%- if not skip_render -%}
 
               {#-- 3. Collect Data --#}
-              {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+              {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+              {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
               {%- set ns.points = states(points_sensor) | int(default=0) -%}
               {%- set ns.points_label = state_attr(points_sensor, 'unit_of_measurement') | default('Pts', true) -%}
               {%- set ns.highest_badge_sensor = core_sensors.get('badges_eid') -%}
@@ -1306,7 +1311,8 @@ sections:
             {%- if not skip_render -%}
 
               {#-- 3. Collect Data --#}
-              {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+              {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+              {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
               {%- set points = states(points_sensor) | int(default=0) -%}
               {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') | default('Pts', true) -%}
 
@@ -1457,7 +1463,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
 
                   {%- set achievements = state_attr(dashboard_helper, 'achievements') | default([], true) -%}
@@ -1584,7 +1591,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set challenges = state_attr(dashboard_helper, 'challenges') | default([], true) -%}
 
                   {#-- 4. Build Display --#}
@@ -1716,7 +1724,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
 
                   {%- set points = states(points_sensor) | int(default=0) -%}
                   {%- set points_attrs = states[points_sensor].attributes | default({}, true) -%}
@@ -1905,8 +1914,9 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set helper_attrs = states[dashboard_helper].attributes -%}
-                  {%- set ui = helper_attrs.ui_translations | default({}, true) -%}
                   {%- set pending_approvals = helper_attrs.pending_approvals | default({}, true) -%}
                   {%- set pending_chore_data = pending_approvals.get('chores', []) | default([], true) -%}
                   {%- set pending_reward_data = pending_approvals.get('rewards', []) | default([], true) -%}
@@ -2081,7 +2091,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data (Step 1: Use dashboard helper lookups) --#}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
                   {%- set chore_list = state_attr(dashboard_helper, 'chores') | default([], true) -%}
                   {%- set ns.chore_selected = states(chore_select_entity) | default('') -%}
@@ -2442,7 +2453,8 @@ sections:
                 {#-- *** Section 3: Collect Data *** --#}
                 {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
                 {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -2506,7 +2518,8 @@ sections:
                 {#-- *** Section 3: Collect Data *** --#}
                 {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
                 {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                 {%- set ns.points_sensor = core_sensors.get('points_eid') -%}
                 {%- set ns.points_label = state_attr(ns.points_sensor, 'unit_of_measurement') -%}
                 {%- set bonus_list = state_attr(dashboard_helper, 'bonuses') | default([], true) -%}
@@ -2577,7 +2590,8 @@ sections:
 
                 {#-- *** Section 3: Collect Data *** --#}
                 {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                 {%- set point_buttons = state_attr(dashboard_helper, 'points_buttons') | default([], true) -%}
 
                 {#-- Validation: Check if name is configured --#}
@@ -2648,7 +2662,8 @@ sections:
 
                   {#-- *** Section 3: Collect Data *** --#}
                   {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set ns.points_sensor = core_sensors.get('points_eid') -%}
                   {%- set ns.points_label = state_attr(ns.points_sensor, 'unit_of_measurement') -%}
                   {%- set penalty_list = state_attr(dashboard_helper, 'penalties') | default([], true) -%}
@@ -2739,7 +2754,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- *** Section 3: Collect Data *** --#}
-                  {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set entity_list = device_entities(device_id(dashboard_helper))
                     | reject('search', 'ui_dashboard')
                     | reject('match', 'calendar')
