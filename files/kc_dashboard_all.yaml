@@ -18,7 +18,7 @@ sections:
               template: >-
                 {#-- ============================================= --#}
 
-                {#-- ============ Version KCD_v0.5.0 ============= --#}
+                {#-- ============ Version KCD_v0.5.0b3 ============= --#}
 
                 {#-- ============================================= --#}
 
@@ -40,10 +40,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
-                {%- set total_sensor = core_sensors.get('chores_eid') -%}
-                {%- set highest_badge_entity = core_sensors.get('badges_eid') -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -69,6 +65,10 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
+                  {%- set total_sensor = core_sensors.get('chores_eid') -%}
+                  {%- set highest_badge_entity = core_sensors.get('badges_eid') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points = states(points_sensor) | int(default=0) -%}
@@ -164,8 +164,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
 
                 {%- set ns = namespace(
                   overdue_buttons=[],
@@ -202,6 +200,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
@@ -542,8 +542,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
 
                 {%- set ns = namespace(
                   all_labels=[],
@@ -580,6 +578,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
@@ -782,10 +782,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
-                {%- set all_time_sensor = core_sensors.get('chores_eid') -%}
-                {%- set highest_badge_entity = core_sensors.get('badges_eid') -%}
 
                 {%- set ns = namespace(
                   badge_list="\n ",
@@ -824,6 +820,10 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
+                  {%- set all_time_sensor = core_sensors.get('chores_eid') -%}
+                  {%- set highest_badge_entity = core_sensors.get('badges_eid') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set helper_attrs = states[dashboard_helper].attributes -%}
@@ -1008,8 +1008,6 @@ sections:
             {#-- 2. Initialize Variables --#}
             {%- set name_normalize = name | slugify() -%}
             {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-            {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-            {%- set points_sensor = core_sensors.get('points_eid') -%}
 
             {%- set ns = namespace(
               badges=[],
@@ -1055,6 +1053,8 @@ sections:
             {%- if not skip_render -%}
 
               {#-- 3. Collect Data --#}
+              {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+              {%- set points_sensor = core_sensors.get('points_eid') -%}
               {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
               {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
               {%- set ns.points = states(points_sensor) | int(default=0) -%}
@@ -1280,8 +1280,6 @@ sections:
             {#-- 2. Initialize Variables --#}
             {%- set name_normalize = name | slugify() -%}
             {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-            {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-            {%- set points_sensor = core_sensors.get('points_eid') -%}
 
             {%- set ns = namespace(
               badges=[]
@@ -1311,6 +1309,8 @@ sections:
             {%- if not skip_render -%}
 
               {#-- 3. Collect Data --#}
+              {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+              {%- set points_sensor = core_sensors.get('points_eid') -%}
               {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
               {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
               {%- set points = states(points_sensor) | int(default=0) -%}
@@ -1430,8 +1430,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
 
                 {%- set ns = namespace(
                   STREAK_GOAL='Streak Goal',
@@ -1463,6 +1461,8 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
@@ -1563,9 +1563,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
-                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -1591,6 +1588,9 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
+                  {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set challenges = state_attr(dashboard_helper, 'challenges') | default([], true) -%}
@@ -1695,10 +1695,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
-                {%- set total_chores_sensor = core_sensors.get('chores_eid') -%}
-                {%- set highest_badge_sensor = core_sensors.get('badges_eid') -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -1724,6 +1720,10 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
+                  {%- set total_chores_sensor = core_sensors.get('chores_eid') -%}
+                  {%- set highest_badge_sensor = core_sensors.get('badges_eid') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
 
@@ -2041,11 +2041,6 @@ sections:
                 {#-- 2. Initialize Variables --#}
                 {%- set name_normalize = name | slugify() -%}
                 {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set points_sensor = core_sensors.get('points_eid') -%}
-                {%- set dashboard_helpers = state_attr(dashboard_helper, 'dashboard_helpers') or {} -%}
-                {%- set dashboard_date_helper = dashboard_helpers.get('date_helper_eid') -%}
-                {%- set chore_select_entity = dashboard_helpers.get('chore_select_eid') -%}
 
                 {%- set ns = namespace(
                   chore_selected='',
@@ -2091,6 +2086,11 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- 3. Collect Data (Step 1: Use dashboard helper lookups) --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set points_sensor = core_sensors.get('points_eid') -%}
+                  {%- set dashboard_helpers = state_attr(dashboard_helper, 'dashboard_helpers') or {} -%}
+                  {%- set dashboard_date_helper = dashboard_helpers.get('date_helper_eid') -%}
+                  {%- set chore_select_entity = dashboard_helpers.get('chore_select_eid') -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
                   {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
@@ -2449,12 +2449,7 @@ sections:
                 {#-- *** Section 2: Initialize Variables *** --#}
                 {%- set ns = namespace( name_normalize='' ) -%}
                 {%- set ns.name_normalize = name | slugify() -%}
-
-                {#-- *** Section 3: Collect Data *** --#}
                 {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
-                {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -2477,11 +2472,17 @@ sections:
                   {%- set skip_render = false -%}
                 {%- endif -%}
 
-                {#-- *** Section 4: Build Display *** --#}
-                {#-- No intermediate variables needed for inline translations --#}
-
-                {#-- *** Section 5: Render *** --#}
                 {%- if not skip_render -%}
+
+                  {#-- *** Section 3: Collect Data *** --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
+
+                  {#-- *** Section 4: Build Display *** --#}
+                  {#-- No intermediate variables needed for inline translations --#}
+
+                  {#-- *** Section 5: Render *** --#}
                   {{- {
                     'type': 'heading',
                     'icon': 'mdi:plus-circle-multiple',
@@ -2514,15 +2515,7 @@ sections:
                 {#-- *** Section 2: Initialize Variables *** --#}
                 {%- set ns = namespace( name_normalize='', points_sensor='', points_label='' ) -%}
                 {%- set ns.name_normalize = name | slugify() -%}
-
-                {#-- *** Section 3: Collect Data *** --#}
                 {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
-                {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
-                {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
-                {%- set ns.points_sensor = core_sensors.get('points_eid') -%}
-                {%- set ns.points_label = state_attr(ns.points_sensor, 'unit_of_measurement') -%}
-                {%- set bonus_list = state_attr(dashboard_helper, 'bonuses') | default([], true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' or states(dashboard_helper) in ['unknown', 'unavailable'] -%}
@@ -2531,11 +2524,20 @@ sections:
                   {%- set skip_render = false -%}
                 {%- endif -%}
 
-                {#-- *** Section 4: Build Display *** --#}
-                {#-- No intermediate variables needed, inline translations directly --#}
-
-                {#-- *** Section 5: Render *** --#}
                 {%- if not skip_render -%}
+
+                  {#-- *** Section 3: Collect Data *** --#}
+                  {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
+                  {%- set ns.points_sensor = core_sensors.get('points_eid') -%}
+                  {%- set ns.points_label = state_attr(ns.points_sensor, 'unit_of_measurement') -%}
+                  {%- set bonus_list = state_attr(dashboard_helper, 'bonuses') | default([], true) -%}
+
+                  {#-- *** Section 4: Build Display *** --#}
+                  {#-- No intermediate variables needed, inline translations directly --#}
+
+                  {#-- *** Section 5: Render *** --#}
                   {%- for bonus in bonus_list -%}
                   {%- set bonus_name = (bonus.name | default('Unknown Bonus')) if bonus is mapping else 'Unknown Bonus' -%}
                   {%- set bonus_button_eid = (bonus.eid | default('')) if bonus is mapping else '' -%}
@@ -2587,12 +2589,7 @@ sections:
                 {#-- *** Section 2: Initialize Variables *** --#}
                 {%- set ns = namespace( name_normalize='' ) -%}
                 {%- set ns.name_normalize = name | slugify() -%}
-
-                {#-- *** Section 3: Collect Data *** --#}
                 {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
-                {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
-                {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
-                {%- set point_buttons = state_attr(dashboard_helper, 'points_buttons') | default([], true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' or states(dashboard_helper) in ['unknown', 'unavailable'] -%}
@@ -2601,11 +2598,17 @@ sections:
                   {%- set skip_render = false -%}
                 {%- endif -%}
 
-                {#-- *** Section 4: Build Display *** --#}
-                {#-- No intermediate variables needed, render directly --#}
-
-                {#-- *** Section 5: Render *** --#}
                 {%- if not skip_render -%}
+
+                  {#-- *** Section 3: Collect Data *** --#}
+                  {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
+                  {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
+                  {%- set point_buttons = state_attr(dashboard_helper, 'points_buttons') | default([], true) -%}
+
+                  {#-- *** Section 4: Build Display *** --#}
+                  {#-- No intermediate variables needed, render directly --#}
+
+                  {#-- *** Section 5: Render *** --#}
                   {%- for button_data in point_buttons -%}
                   {%- set button_eid = button_data.eid if button_data is mapping else button_data -%}
                   {%- set button_name = button_data.name if button_data is mapping else '' -%}
