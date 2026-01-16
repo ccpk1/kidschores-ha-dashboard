@@ -2161,29 +2161,50 @@ sections:
                       'True': ui.get('true', 'err-true')
                   } -%}
 
-                  {#-- Step 2: Pre-compute kid_name based on completion_criteria (independent vs shared) --#}
-                  {%- set completion_criteria = ns.selected_chore_data.get('completion_criteria', 'shared') if ns.selected_chore_data else 'shared' -%}
-                  {%- set ns.kid_name_for_service = name if completion_criteria == 'independent' else '' -%}
-
+                  {#-- Step 2: Fetch chore data from sensor state (dashboard helper only provides eid, name, status, labels, primary_group, is_today_am) --#}
                   {%- if ns.selected_chore_data -%}
                     {%- set chore_sensor_eid = ns.selected_chore_data.get('eid') -%}
-                    {%- set ns.current_status = ns.selected_chore_data.get('status', 'Unknown') -%}
-                    {%- set ns.global_status = ns.selected_chore_data.get('global_state') or state_attr(chore_sensor_eid, 'global_state') or 'Unknown' -%}
-                    {%- set ns.shared_chore = ns.selected_chore_data.get('completion_criteria') or state_attr(chore_sensor_eid, 'completion_criteria') or 'shared_all' -%}
-                    {%- set ns.chore_allow_multiple = ns.selected_chore_data.get('approval_reset_type') or state_attr(chore_sensor_eid, 'approval_reset_type') or 'at_midnight_once' -%}
-                    {%- set ns.recurrence = state_attr(chore_sensor_eid, 'recurring_frequency') or 'none' -%}
-                    {%- if ns.recurrence and ns.recurrence != 'none' -%}
-                      {%- set ns.recurrence = recurrence_map.get(ns.recurrence, ns.recurrence) -%}
+                    {%- set chore_state = states[chore_sensor_eid] if chore_sensor_eid else none -%}
+
+                    {#-- Gracefully handle missing/unavailable chore entity --#}
+                    {%- if chore_state and chore_state.state not in ['unknown', 'unavailable'] -%}
+                      {#-- Get data from helper (lightweight fields) and sensor attributes (detailed fields) --#}
+                      {%- set ns.current_status = ns.selected_chore_data.get('status', 'Unknown') -%}
+                      {%- set ns.global_status = chore_state.attributes.get('global_state', 'Unknown') -%}
+                      {%- set ns.shared_chore = chore_state.attributes.get('completion_criteria', 'shared_all') -%}
+                      {%- set ns.chore_allow_multiple = chore_state.attributes.get('approval_reset_type', 'at_midnight_once') -%}
+                      {%- set ns.recurrence = chore_state.attributes.get('recurring_frequency', 'none') -%}
+                      {%- if ns.recurrence and ns.recurrence != 'none' -%}
+                        {%- set ns.recurrence = recurrence_map.get(ns.recurrence, ns.recurrence) -%}
+                      {%- else -%}
+                        {%- set ns.recurrence = ui.get('none', 'err-none') -%}
+                      {%- endif -%}
+                      {%- set ns.chore_value = chore_state.attributes.get('default_points', 0) | int(default=0) -%}
+                      {%- set ns.chore_icon = chore_state.attributes.get('chore_icon', 'mdi:clipboard-check') -%}
+                      {%- set ns.chore_description = chore_state.attributes.get('description', '') -%}
+                      {%- set ns.chore_days = chore_state.attributes.get('applicable_days', []) -%}
+                      {%- set ns.chore_custom_freq_unit = chore_state.attributes.get('custom_frequency_unit', '') -%}
+                      {%- set ns.chore_custom_freq_int = chore_state.attributes.get('custom_frequency_interval', '') -%}
+
+                      {#-- Pre-compute kid_name based on completion_criteria (independent vs shared) --#}
+                      {%- set ns.kid_name_for_service = name if ns.shared_chore == 'independent' else '' -%}
                     {%- else -%}
+                      {#-- Chore entity not found or unavailable - use safe defaults --#}
+                      {%- set ns.current_status = 'Unknown' -%}
+                      {%- set ns.global_status = 'Unknown' -%}
+                      {%- set ns.shared_chore = 'shared_all' -%}
+                      {%- set ns.chore_allow_multiple = 'at_midnight_once' -%}
                       {%- set ns.recurrence = ui.get('none', 'err-none') -%}
+                      {%- set ns.chore_value = 0 -%}
+                      {%- set ns.chore_icon = 'mdi:clipboard-check' -%}
+                      {%- set ns.chore_description = '' -%}
+                      {%- set ns.chore_days = [] -%}
+                      {%- set ns.chore_custom_freq_unit = '' -%}
+                      {%- set ns.chore_custom_freq_int = '' -%}
+                      {%- set ns.kid_name_for_service = '' -%}
                     {%- endif -%}
-                    {%- set ns.chore_value = ns.selected_chore_data.get('points') or state_attr(chore_sensor_eid, 'default_points') or 0 | int(default=0) -%}
-                    {%- set ns.chore_icon = ns.selected_chore_data.get('icon') or state_attr(chore_sensor_eid, 'chore_icon') or 'mdi:clipboard-check' -%}
-                    {%- set ns.chore_description = ns.selected_chore_data.get('description') or state_attr(chore_sensor_eid, 'description') or '' -%}
-                    {%- set ns.chore_days = ns.selected_chore_data.get('applicable_days', []) -%}
-                    {%- set ns.chore_custom_freq_unit = ns.selected_chore_data.get('custom_frequency_unit') or state_attr(chore_sensor_eid, 'custom_frequency_unit') or '' -%}
-                    {%- set ns.chore_custom_freq_int = ns.selected_chore_data.get('custom_frequency_interval') or state_attr(chore_sensor_eid, 'custom_frequency_interval') or '' -%}
                   {%- else -%}
+                    {#-- No chore selected - use safe defaults --#}
                     {%- set ns.current_status = 'Unknown' -%}
                     {%- set ns.global_status = 'Unknown' -%}
                     {%- set ns.shared_chore = 'shared_all' -%}
@@ -2204,12 +2225,13 @@ sections:
                   {%- set completion_criteria_display = state_map.get(ns.shared_chore, ns.shared_chore) if ns.shared_chore else ui.get('unknown', 'err-unknown') -%}
                   {%- set approval_reset_display = approval_reset_map.get(ns.chore_allow_multiple, ns.chore_allow_multiple) if ns.chore_allow_multiple else ui.get('unknown', 'err-unknown') -%}
 
-                  {#-- Convert and Format Due Date --#}
-                  {%- if ns.selected_chore_data -%}
-                    {%- set due_date_str = ns.selected_chore_data.get('due_date', '') | string -%}
-                    {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable', ''] else None -%}
-                    {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ui.get('none', 'err-none') -%}
+                  {#-- Convert and Format Due Date from chore sensor attributes --#}
+                  {%- if chore_state -%}
+                    {%- set due_date_str = chore_state.attributes.get('due_date', '') | string -%}
+                    {%- set ns.due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable', ''] else None -%}
+                    {%- set ns.due_date_formatted = as_timestamp(ns.due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if ns.due_date else ui.get('none', 'err-none') -%}
                   {%- else -%}
+                    {%- set ns.due_date = None -%}
                     {%- set ns.due_date_formatted = ui.get('none', 'err-none') -%}
                   {%- endif -%}
 
@@ -2337,7 +2359,7 @@ sections:
                             'data': {
                               'chore_name': ns.chore_selected,
                               'kid_name': ns.kid_name_for_service,
-                              'due_date': (as_datetime(due_date) + timedelta(days=1)).isoformat() if due_date else ''
+                              'due_date': (ns.due_date + timedelta(days=1)).isoformat() if ns.due_date else ''
                             }
                           }
                         },
@@ -2353,7 +2375,7 @@ sections:
                             'data': {
                               'chore_name': ns.chore_selected,
                               'kid_name': ns.kid_name_for_service,
-                              'due_date': (as_datetime(due_date) + timedelta(weeks=1)).isoformat() if due_date else ''
+                              'due_date': (ns.due_date + timedelta(weeks=1)).isoformat() if ns.due_date else ''
                             }
                           }
                         },
