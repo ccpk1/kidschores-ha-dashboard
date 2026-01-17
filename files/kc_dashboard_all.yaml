@@ -2162,6 +2162,7 @@ sections:
                   } -%}
 
                   {#-- Step 2: Fetch chore data from sensor state (dashboard helper only provides eid, name, status, labels, primary_group, is_today_am) --#}
+                  {%- set chore_state = none -%}
                   {%- if ns.selected_chore_data -%}
                     {%- set chore_sensor_eid = ns.selected_chore_data.get('eid') -%}
                     {%- set chore_state = states[chore_sensor_eid] if chore_sensor_eid else none -%}
