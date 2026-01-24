@@ -38,8 +38,15 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -540,8 +547,15 @@ sections:
                 {%- set pref_label_display_order = pref_label_display_order if pref_label_display_order is iterable and pref_label_display_order is not string else [] -%}
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {%- set ns = namespace(
                   all_labels=[],
@@ -780,8 +794,15 @@ sections:
                 {%- set pref_show_penalties = (pref_show_penalties | default('true') | string | lower) == 'true' -%}
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {%- set ns = namespace(
                   badge_list="\n ",
@@ -1006,8 +1027,15 @@ sections:
 
 
             {#-- 2. Initialize Variables --#}
-            {%- set name_normalize = name | slugify() -%}
-            {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+            {%- set dashboard_helper = integration_entities('kidschores')
+                | select('search', 'ui_dashboard_helper')
+                | list
+                | expand
+                | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                | selectattr('attributes.kid_name', 'eq', name)
+                | map(attribute='entity_id')
+                | first
+                | default("err-dashboard_helper_missing", true) -%}
 
             {%- set ns = namespace(
               badges=[],
@@ -1278,8 +1306,15 @@ sections:
 
 
             {#-- 2. Initialize Variables --#}
-            {%- set name_normalize = name | slugify() -%}
-            {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+            {%- set dashboard_helper = integration_entities('kidschores')
+                | select('search', 'ui_dashboard_helper')
+                | list
+                | expand
+                | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                | selectattr('attributes.kid_name', 'eq', name)
+                | map(attribute='entity_id')
+                | first
+                | default("err-dashboard_helper_missing", true) -%}
 
             {%- set ns = namespace(
               badges=[]
@@ -1428,8 +1463,15 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {%- set ns = namespace(
                   STREAK_GOAL='Streak Goal',
@@ -1561,8 +1603,15 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -1693,8 +1742,15 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -1880,8 +1936,15 @@ sections:
                 {%- set pref_column_count = pref_column_count | int(default=2) -%}
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {%- set ns = namespace(
                   approve_chore_buttons=[],
@@ -2144,16 +2207,22 @@ sections:
                   {%- set recurrence_map = {
                       'none': ui.get('none', 'err-none'),
                       'daily': ui.get('daily', 'err-daily'),
+                      'daily_multi': ui.get('daily_multi', 'err-daily_multi'),
                       'weekly': ui.get('weekly', 'err-weekly'),
                       'biweekly': ui.get('biweekly', 'err-biweekly'),
                       'monthly': ui.get('monthly', 'err-monthly'),
                       'quarterly': ui.get('quarterly', 'err-quarterly'),
                       'yearly': ui.get('yearly', 'err-yearly'),
                       'custom': ui.get('custom', 'err-custom'),
+                      'custom_from_complete': ui.get('custom_from_complete', 'err-custom_from_complete'),
                       'custom_1_week': ui.get('custom_1_week', 'err-custom_1_week'),
                       'custom_1_month': ui.get('custom_1_month', 'err-custom_1_month'),
                       'custom_1_quarter': ui.get('custom_1_quarter', 'err-custom_1_quarter'),
-                      'custom_1_year': ui.get('custom_1_year', 'err-custom_1_year')
+                      'custom_1_year': ui.get('custom_1_year', 'err-custom_1_year'),
+                      'week_end': ui.get('week_end', 'err-week_end'),
+                      'month_end': ui.get('month_end', 'err-month_end'),
+                      'quarter_end': ui.get('quarter_end', 'err-quarter_end'),
+                      'year_end': ui.get('year_end', 'err-year_end')
                   } -%}
 
                   {%- set state_map_tf = {
@@ -2470,9 +2539,15 @@ sections:
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
                 {#-- *** Section 2: Initialize Variables *** --#}
-                {%- set ns = namespace( name_normalize='' ) -%}
-                {%- set ns.name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
@@ -2536,9 +2611,15 @@ sections:
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
                 {#-- *** Section 2: Initialize Variables *** --#}
-                {%- set ns = namespace( name_normalize='', points_sensor='', points_label='' ) -%}
-                {%- set ns.name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' or states(dashboard_helper) in ['unknown', 'unavailable'] -%}
@@ -2550,6 +2631,7 @@ sections:
                 {%- if not skip_render -%}
 
                   {#-- *** Section 3: Collect Data *** --#}
+                  {%- set ns = namespace( points_sensor='', points_label='' ) -%}
                   {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
@@ -2610,9 +2692,15 @@ sections:
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
                 {#-- *** Section 2: Initialize Variables *** --#}
-                {%- set ns = namespace( name_normalize='' ) -%}
-                {%- set ns.name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' or states(dashboard_helper) in ['unknown', 'unavailable'] -%}
@@ -2673,9 +2761,15 @@ sections:
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
                 {#-- *** Section 2: Initialize Variables *** --#}
-                {%- set ns = namespace(name_normalize='', points_sensor='', points_label='') -%}
-                {%- set ns.name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' or states(dashboard_helper) in ['unknown', 'unavailable'] -%}
@@ -2687,6 +2781,7 @@ sections:
                 {% if not skip_render %}
 
                   {#-- *** Section 3: Collect Data *** --#}
+                  {%- set ns = namespace(points_sensor='', points_label='') -%}
                   {%- set core_sensors = state_attr(dashboard_helper, 'core_sensors') or {} -%}
                   {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
                   {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
@@ -2752,9 +2847,15 @@ sections:
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
                 {#-- *** Section 2: Initialize Variables *** --#}
-                {%- set ns = namespace( name_normalize='' ) -%}
-                {%- set ns.name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ ns.name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {#-- Validation: Check if name is configured --#}
                 {%- if name == 'K i d n a m e' | replace(' ', '') or name == '' -%}
