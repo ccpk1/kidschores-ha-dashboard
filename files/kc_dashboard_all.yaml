@@ -169,8 +169,15 @@ sections:
                 {%- set pref_label_display_order = pref_label_display_order if pref_label_display_order is iterable and pref_label_display_order is not string else [] -%}
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {%- set ns = namespace(
                   overdue_buttons=[],
@@ -429,6 +436,7 @@ sections:
                       {%- set chore_state = states(chore_sensor_id) -%}
                       {%- set state_map = {
                           'pending': ui.get('pending', 'err-pending'),
+                          'due': ui.get('due', 'err-due'),
                           'claimed': ui.get('claimed', 'err-claimed'),
                           'claimed_in_part': ui.get('claimed_in_part', 'err-claimed_in_part'),
                           'approved': ui.get('approved', 'err-approved'),
@@ -2102,8 +2110,15 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
-                {%- set name_normalize = name | slugify() -%}
-                {%- set dashboard_helper = 'sensor.kc_' ~ name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set dashboard_helper = integration_entities('kidschores')
+                    | select('search', 'ui_dashboard_helper')
+                    | list
+                    | expand
+                    | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
+                    | selectattr('attributes.kid_name', 'eq', name)
+                    | map(attribute='entity_id')
+                    | first
+                    | default("err-dashboard_helper_missing", true) -%}
 
                 {%- set ns = namespace(
                   chore_selected='',
