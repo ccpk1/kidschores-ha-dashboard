@@ -88,7 +88,6 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
 #### 2️⃣ Chores Section
 
 - Chores are **automatically categorized** into:
-
   - 🛑 **Overdue** — Chores past their due date
   - ☀️ **Due this Morning** — Chores due before noon
   - 🌞 **Due Today** — Chores due between noon and midnight
@@ -266,7 +265,6 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
 
 - Displays a **chore selector** to quickly find and update due dates.
 - Provides options for adjusting due dates:
-
   - 📅 **+Next Due**
   - 📅 **+1 Day**
   - 📅 **+1 Week**
@@ -521,16 +519,18 @@ In **earlier versions** of the KidsChores Dashboard, renaming chores and rewards
 ### **🌐 Currently Supported Languages**
 
 - 🇬🇧 **English** (`en`)
-- 🇩🇪 **German** (`de`)
-- 🇫🇷 **French** (`fr`)
-- 🇪🇸 **Spanish** (`es`)
-- 🇵🇹 **Portuguese** (`pt`)
-- �🇱 **Dutch** (`nl`)
 - 🇨🇦 **Catalan** (`ca`)
 - 🇩🇰 **Danish** (`da`)
+- 🇩🇪 **German** (`de`)
+- 🇪🇸 **Spanish** (`es`)
 - 🇫🇮 **Finnish** (`fi`)
-- 🇳🇴 **Norwegian** (`no`)
+- 🇫🇷 **French** (`fr`)
+- 🇳🇴 **Norwegian Bokmål** (`nb`)
+- 🇳🇱 **Dutch** (`nl`)
+- 🇵🇹 **Portuguese** (`pt`)
 - 🇸🇰 **Slovak** (`sk`)
+- 🇸🇮 **Slovenian** (`sl`)
+- 🇸🇪 **Swedish** (`sv`)
 
 ### **🐛 Found a Translation Issue or Want a New Language?**
 
