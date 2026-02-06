@@ -416,6 +416,7 @@ sections:
 
                     {%- for chore_sensor_id in group.buttons -%}
                       {%- set claim_button_eid = state_attr(chore_sensor_id, 'claim_button_eid') | default('', true) -%}
+                      {%- set disapprove_button_eid = state_attr(chore_sensor_id, 'disapprove_button_eid') | default('', true) -%}
                       {%- set chore_name = state_attr(chore_sensor_id, 'chore_name') | default('Unknown') -%}
                       {%- set shared_chore = state_attr(chore_sensor_id, 'completion_criteria') != 'independent' -%}
                       {%- set primary = chore_name ~ (' (S)' if shared_chore else '') -%}
@@ -481,8 +482,10 @@ sections:
                             'mdi:lock' if chore_state == 'completed_by_other' else
                             ''
                           ) -%}
+                      {#-- Select button entity based on chore state: disapprove for claimed, claim for others --#}
+                      {%- set active_button_eid = disapprove_button_eid if chore_state == 'claimed' else claim_button_eid -%}
                       {#-- Add chore card to the group_cards list --#}
-                      {%- set chore_icon = state_attr(chore_sensor_id, 'icon') | default('mdi:broom') -%}
+                      {%- set chore_icon = state_attr(chore_sensor_id, 'icon') | default('mdi:broom', true) -%}
                       {%- set ns.group_cards = ns.group_cards + [{
                           'type': 'custom:mushroom-template-card',
                           'entity': chore_sensor_id,
@@ -498,7 +501,7 @@ sections:
                             'action': 'call-service',
                             'service': 'button.press',
                             'target': {
-                              'entity_id': claim_button_eid
+                              'entity_id': active_button_eid
                             }
                           },
                           'hold_action': {
@@ -739,19 +742,53 @@ sections:
                         {%- set reward_claims = (reward.claims | int(default=0)) if reward is mapping else 0 -%}
                         {%- set reward_approvals = (reward.approvals | int(default=0)) if reward is mapping else 0 -%}
                         {%- set reward_sensor_eid = reward.eid if reward is mapping else '' -%}
+                        {%- set reward_icon = state_attr(reward_sensor_eid, 'icon') | default('mdi:gift', true) -%}
                         {%- set claim_button_eid = state_attr(reward_sensor_eid, 'claim_button_eid') | default('', true) -%}
+                        {%- set disapprove_button_eid = state_attr(reward_sensor_eid, 'disapprove_button_eid') | default('', true) -%}
 
-                        {%- set points_needed = reward_cost - current_points if reward_cost > current_points else 0 -%}
-                        {%- set can_claim = "✅" if points_needed == 0 else "❌ " ~ ui.get('need', 'err-need') ~ " " ~ points_needed ~ " " ~ ui.get('more', 'err-more') -%}
+                        {%- set reward_state = states(reward_sensor_eid) -%}
+                        {%- set state_map = {
+                            'locked': ui.get('locked', 'err-locked'),
+                            'available': ui.get('available', 'err-available'),
+                            'requested': ui.get('requested', 'err-requested'),
+                            'approved': ui.get('approved', 'err-approved')
+                        } -%}
+                        {%- set reward_state_display = state_map.get(reward_state, reward_state) -%}
+
+                        {%- set icon_color = (
+                            'green' if reward_state == 'available' else
+                            'orange' if reward_state == 'requested' else
+                            'blue' if reward_state == 'approved' else
+                            'grey'
+                        ) -%}
+
+                        {%- set badge_color = (
+                            'green' if reward_state == 'approved' else
+                            'orange' if reward_state == 'requested' else
+                            'grey' if reward_state == 'locked' else
+                            ''
+                        ) -%}
+
+                        {%- set badge_icon = (
+                            'mdi:check-bold' if reward_state == 'approved' else
+                            'mdi:clock' if reward_state == 'requested' else
+                            'mdi:lock' if reward_state == 'locked' else
+                            ''
+                        ) -%}
+
+                        {#-- Select button entity based on reward state: disapprove for requested, claim for others --#}
+                        {%- set active_button_eid = disapprove_button_eid if reward_state == 'requested' else claim_button_eid -%}
 
                         {%- set ns.group_cards = ns.group_cards + [{
                           'type': 'custom:mushroom-template-card',
                           'entity': reward_sensor_eid,
-                          'primary': reward_name,
-                          'secondary': "💰 " ~ ui.get('cost', 'err-cost') ~ ": " ~ reward_cost|string ~ " | 👍 " ~ reward_approvals|string ~ " | 📥 " ~ reward_claims|string ~ " | " ~ can_claim,
-                          'icon': 'mdi:gift',
-                          'icon_color': 'green' if points_needed == 0 else 'grey',
-                          'tap_action': { 'action': 'call-service', 'service': 'button.press', 'target': {'entity_id': claim_button_eid } },
+                          'primary': reward_name ~ " ( " ~ reward_state_display ~ " )",
+                          'secondary': "💰 " ~ ui.get('cost', 'err-cost') ~ ": " ~ reward_cost|string ~ " | 👍 " ~ reward_approvals|string ~ " | 📥 " ~ reward_claims|string,
+                          'icon': reward_icon,
+                          'icon_color': icon_color,
+                          'badge_color': badge_color,
+                          'badge_icon': badge_icon,
+                          'tap_action': { 'action': 'call-service', 'service': 'button.press', 'target': {'entity_id': active_button_eid } },
                           'hold_action': { 'action': 'more-info' }
                         }] -%}
                       {%- endfor -%}
@@ -2736,30 +2773,31 @@ sections:
 
                   {#-- *** Section 5: Render *** --#}
                   {%- for button_data in point_buttons -%}
-                  {%- set button_eid = button_data.eid if button_data is mapping else button_data -%}
-                  {%- set button_name = button_data.name if button_data is mapping else '' -%}
-                  {%- set primary = button_name | regex_replace('^Points ', '') -%}
-                  {%- set is_positive = 'minus' not in button_eid -%}
-                  {%- set icon = 'mdi:plus-circle' if is_positive else 'mdi:minus-circle' -%}
-                  {%- set icon_color = 'green' if is_positive else 'red' -%}
-                  {{- {
-                    'type': 'custom:mushroom-template-card',
-                    'entity': button_eid,
-                    'primary': primary,
-                    'icon': icon,
-                    'icon_color': icon_color,
-                    'layout': 'vertical',
-                    'tap_action': {
-                      'action': 'call-service',
-                      'service': 'button.press',
-                      'target': {
-                        'entity_id': button_eid
+                    {%- set button_eid = button_data.eid if button_data is mapping else button_data -%}
+                    {%- set button_name = button_data.name if button_data is mapping else '' -%}
+                    {%- set button_icon = state_attr(button_eid, 'icon') or '' -%}
+                    {%- set primary = button_name | regex_replace('^Points ', '') -%}
+                    {%- set is_positive = 'minus' not in button_icon -%}
+                    {%- set icon = button_icon -%}
+                    {%- set icon_color = 'green' if is_positive else 'red' -%}
+                    {{- {
+                      'type': 'custom:mushroom-template-card',
+                      'entity': button_eid,
+                      'primary': primary,
+                      'icon': icon,
+                      'icon_color': icon_color,
+                      'layout': 'vertical',
+                      'tap_action': {
+                        'action': 'call-service',
+                        'service': 'button.press',
+                        'target': {
+                          'entity_id': button_eid
+                        }
+                      },
+                      'hold_action': {
+                        'action': 'more-info'
                       }
-                    },
-                    'hold_action': {
-                      'action': 'more-info'
-                    }
-                  } -}},
+                    } -}},
                   {%- endfor -%}
                 {%- endif -%}
           - type: custom:auto-entities
