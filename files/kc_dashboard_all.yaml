@@ -38,10 +38,12 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -169,10 +171,12 @@ sections:
                 {%- set pref_label_display_order = pref_label_display_order if pref_label_display_order is iterable and pref_label_display_order is not string else [] -%}
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -558,10 +562,12 @@ sections:
                 {%- set pref_label_display_order = pref_label_display_order if pref_label_display_order is iterable and pref_label_display_order is not string else [] -%}
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -839,10 +845,12 @@ sections:
                 {%- set pref_show_penalties = (pref_show_penalties | default('true') | string | lower) == 'true' -%}
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -1072,10 +1080,12 @@ sections:
 
 
             {#-- 2. Initialize Variables --#}
+
             {%- set dashboard_helper = integration_entities('kidschores')
-                | select('search', 'ui_dashboard_helper')
+                | select('search', '^sensor\\.')
                 | list
                 | expand
+                | selectattr('attributes.purpose', 'defined')
                 | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                 | selectattr('attributes.kid_name', 'eq', name)
                 | map(attribute='entity_id')
@@ -1351,10 +1361,12 @@ sections:
 
 
             {#-- 2. Initialize Variables --#}
+
             {%- set dashboard_helper = integration_entities('kidschores')
-                | select('search', 'ui_dashboard_helper')
+                | select('search', '^sensor\\.')
                 | list
                 | expand
+                | selectattr('attributes.purpose', 'defined')
                 | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                 | selectattr('attributes.kid_name', 'eq', name)
                 | map(attribute='entity_id')
@@ -1508,10 +1520,12 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -1648,10 +1662,12 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -1787,10 +1803,12 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -1981,10 +1999,12 @@ sections:
                 {%- set pref_column_count = pref_column_count | int(default=2) -%}
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -2147,10 +2167,12 @@ sections:
 
 
                 {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -2590,11 +2612,13 @@ sections:
                 {#-- *** Section 1: User Config (for user editing) *** --#}
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
-                {#-- *** Section 2: Initialize Variables *** --#}
+                {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -2662,11 +2686,13 @@ sections:
                 {#-- *** Section 1: User Config (for user editing) *** --#}
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
-                {#-- *** Section 2: Initialize Variables *** --#}
+                {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -2743,11 +2769,13 @@ sections:
                 {#-- *** Section 1: User Config (for user editing) *** --#}
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
-                {#-- *** Section 2: Initialize Variables *** --#}
+                {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -2813,11 +2841,13 @@ sections:
                 {#-- *** Section 1: User Config (for user editing) *** --#}
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
-                {#-- *** Section 2: Initialize Variables *** --#}
+                {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
@@ -2899,11 +2929,13 @@ sections:
                 {#-- *** Section 1: User Config (for user editing) *** --#}
                 {%- set name = 'Kidname' -%}  {#-- ⬅️ CHANGE THIS to your child's actual name #}
 
-                {#-- *** Section 2: Initialize Variables *** --#}
+                {#-- 2. Initialize Variables --#}
+
                 {%- set dashboard_helper = integration_entities('kidschores')
-                    | select('search', 'ui_dashboard_helper')
+                    | select('search', '^sensor\\.')
                     | list
                     | expand
+                    | selectattr('attributes.purpose', 'defined')
                     | selectattr('attributes.purpose', 'eq', 'purpose_dashboard_helper')
                     | selectattr('attributes.kid_name', 'eq', name)
                     | map(attribute='entity_id')
