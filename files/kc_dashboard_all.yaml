@@ -87,12 +87,12 @@ sections:
                   {%- set todays_completed = state_attr(total_sensor, 'chore_stat_approved_today') | int(default=0) -%}
                   {%- set highest_badge = states(highest_badge_entity) or 'None' -%}
                   {%- set highest_badge_icon = state_attr(highest_badge_entity, 'icon') or 'mdi:medal-outline' -%}
-                  {%- set highest_badge_multiplier = (state_attr(highest_badge_entity, 'awards') or {}).get('points_multiplier') | float(default=1) -%}
+                  {%- set points_multiplier = state_attr(points_sensor, 'points_multiplier') | float(default=1) -%}
 
                   {#-- 4. Build Display --#}
                   {%- if highest_badge not in ['None', 'unknown', 'Unknown', 'unavailable'] -%}
-                    {%- if highest_badge_multiplier > 1 -%}
-                      {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ " (x" ~ highest_badge_multiplier|string ~ ")  \n" -%}
+                    {%- if points_multiplier > 1 -%}
+                      {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ " (x" ~ points_multiplier|string ~ ")  \n" -%}
                     {%- else -%}
                       {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ "  \n" -%}
                     {%- endif -%}
@@ -908,7 +908,7 @@ sections:
                   {%- set all_time_completed = state_attr(all_time_sensor, 'chore_stat_approved_all_time') | int(default=0) -%}
                   {%- set highest_badge = states(highest_badge_entity) or 'None' -%}
                   {%- set highest_badge_icon = state_attr(highest_badge_entity, 'icon') or 'mdi:medal-outline' -%}
-                  {%- set highest_badge_multiplier = (state_attr(highest_badge_entity, 'awards') or {}).get('points_multiplier') | float(1) -%}
+                  {%- set points_multiplier = state_attr(points_sensor, 'points_multiplier') | float(1) -%}
                   {%- set all_badges = state_attr(highest_badge_entity, 'all_earned_badges') | default([], true) -%}
                   {%- set reward_list = helper_attrs.rewards | default([], true) -%}
                   {%- set badge_list = helper_attrs.badges | default([], true) -%}
@@ -1027,7 +1027,7 @@ sections:
                     "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**" ~ ui.get('earned_all_time', 'err-earned_all_time') ~ ":** &nbsp;&nbsp;" ~ points_earned_all_time ~ " \n\n"
                     "<ha-icon icon=" ~ 'mdi:broom' ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ui.get('total_completed', 'err-total_completed') ~ ":** &nbsp;&nbsp;" ~ all_time_completed ~ " \n\n"
                     "**🥇 " ~ ui.get('highest_badge_earned', 'err-highest_badge_earned') ~ ":** &nbsp;&nbsp;" ~ badge_display_line ~ "  \n"
-                    "**💎 " ~ points_label ~ " " ~ ui.get('multiplier', 'err-multiplier') ~ ":** &nbsp;&nbsp;x" ~ highest_badge_multiplier ~ "  \n\n"
+                    "**💎 " ~ points_label ~ " " ~ ui.get('multiplier', 'err-multiplier') ~ ":** &nbsp;&nbsp;x" ~ points_multiplier ~ "  \n\n"
                     "**🥇 " ~ ui.get('all_earned_badges', 'err-all_earned_badges') ~ ":**  " ~ ns.earned_badges_display ~ "  \n"
                     "#### 🎁 " ~ ui.get('rewards', 'err-rewards') ~ ": &nbsp;&nbsp;" ~
                     ("\n" ~ ('\n'.join(ns.reward_progress)) if ns.reward_progress | length > 0 else ui.get('none', 'err-none')) ~ "  \n\n"
@@ -1141,6 +1141,7 @@ sections:
               {%- set translation_sensor = state_attr(dashboard_helper, 'translation_sensor') -%}
               {%- set ui = state_attr(translation_sensor, 'ui_translations') or {} -%}
               {%- set ns.points = states(points_sensor) | int(default=0) -%}
+              {%- set ns.points_earned_all_time = state_attr(points_sensor, 'point_stat_points_earned_all_time') | int(default=0) -%}
               {%- set ns.points_label = state_attr(points_sensor, 'unit_of_measurement') | default('Pts', true) -%}
               {%- set ns.highest_badge_sensor = core_sensors.get('badges_eid') -%}
               {%- set hb_state = states(ns.highest_badge_sensor) -%}
@@ -1314,10 +1315,10 @@ sections:
                     {%- if ns.has_earned_any -%}
                         {%- set pts_val = ns.points_to_next -%}
 
-                    {#- SCENARIO B: User has NO earned badges. Calculate manually. -#}
+                    {#- SCENARIO B: User has NO earned badges. Use all-time earned from sensor. -#}
                     {%- else -%}
-                        {%- set pts_val = (badge.threshold - ns.points) | int -%}
-                        {%- if pts_val < 0 -%} {%- set pts_val = 0 -%} {%- endif -%}
+                      {%- set pts_val = ((badge.threshold - ns.points_earned_all_time) | float(default=0) | round(0, 'ceil')) | int -%}
+                      {%- if pts_val < 0 -%} {%- set pts_val = 0 -%} {%- endif -%}
                     {%- endif -%}
 
                     {%- if pts_val > 0 -%}
@@ -1868,12 +1869,12 @@ sections:
                   {#-- Badge Stats from highest_badge --#}
                   {%- set highest_badge = states(highest_badge_sensor) or 'None' -%}
                   {%- set highest_badge_icon = state_attr(highest_badge_sensor, 'icon') or 'mdi:medal-outline' -%}
-                  {%- set highest_badge_multiplier = (state_attr(highest_badge_sensor, 'awards') or {}).get('points_multiplier') | float(default=1) -%}
+                  {%- set points_multiplier = state_attr(points_sensor, 'points_multiplier') | float(default=1) -%}
 
                   {#-- 4. Build Display --#}
                   {%- if highest_badge not in ['None', 'unknown', 'Unknown', 'unavailable'] -%}
-                    {%- if highest_badge_multiplier > 1 -%}
-                      {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ " (x" ~ highest_badge_multiplier|string ~ ")  \n" -%}
+                    {%- if points_multiplier > 1 -%}
+                      {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ " (x" ~ points_multiplier|string ~ ")  \n" -%}
                     {%- else -%}
                       {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ "  \n" -%}
                     {%- endif -%}
