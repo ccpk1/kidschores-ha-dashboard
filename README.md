@@ -1,3 +1,17 @@
+> [!IMPORTANT]
+> **⚠️ ACTIVE DEVELOPMENT HAS MOVED TO CHOREOPS**
+>
+> `KidsChores` has officially evolved into a new, expanded integration called **[ChoreOps](https://github.com/ccpk1/choreops)**.
+> 
+> Based on incredible feedback from this community, the backend has been completely re-architected to Home Assistant Platinum standards to support *everyone* in the household (not just kids!), along with an entirely new "Over-The-Air" dashboard system.
+> 
+> **Please migrate to ChoreOps to access all new features and continued support.**
+> Upgrading is safe and easy: ChoreOps includes a built-in migration tool and runs safely in parallel with KidsChores. You can set it up, migrate your data, and ensure you are completely happy before removing your old configuration.
+> 
+> 👉 **[Get started with ChoreOps here!](https://github.com/ccpk1/choreops)**
+
+---
+
 # 🏡 Kids Chores and Rewards Dashboard  
 A fully automated **UI dashboard** built specifically for the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha), seamlessly integrating with Home Assistant. Designed to provide a **complete front-end experience**, this dashboard makes it easy to interact with the KidsChores system—allowing kids to claim chores, track progress, and redeem rewards while giving parents full control over approvals and management.  
 
